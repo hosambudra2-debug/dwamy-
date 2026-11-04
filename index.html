@@ -1,0 +1,5023 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10363a" />
+    <title>دوامي — منظومة الحضور والانصراف</title>
+    <style>
+      :root {
+        --ink: #173a3d;
+        --ink-soft: #496669;
+        --muted: #829698;
+        --teal: #13877f;
+        --teal-dark: #0b706b;
+        --mint: #e7f4ef;
+        --mint-deep: #cce9dc;
+        --lime: #c8df91;
+        --amber: #daa95e;
+        --red: #c75d56;
+        --line: #e8efec;
+        --canvas: #f5f8f6;
+        --white: #fff;
+        --nav: #103337;
+        --shadow: 0 14px 40px rgba(24, 58, 60, 0.07);
+        --r: 18px;
+        --font-scale: 1;
+        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+        color: var(--ink);
+        background: var(--canvas);
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        min-width: 320px;
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background: var(--canvas);
+        font-size: calc(14px * var(--font-scale, 1));
+        -webkit-font-smoothing: antialiased;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.48;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      svg {
+        display: block;
+      }
+      .auth-view {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        background: white;
+      }
+      .auth-story {
+        position: relative;
+        overflow: hidden;
+        min-height: 100vh;
+        padding: 36px 7%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        color: #f2faf6;
+        background:
+          radial-gradient(
+            circle at 74% 72%,
+            rgba(48, 166, 143, 0.23),
+            transparent 35%
+          ),
+          linear-gradient(145deg, #143c40, #0d292e 78%);
+      }
+      .auth-story:before,
+      .auth-story:after {
+        content: "";
+        position: absolute;
+        border: 1px solid rgba(205, 238, 222, 0.1);
+        border-radius: 50%;
+        width: 540px;
+        height: 540px;
+        inset: -300px -260px auto auto;
+        box-shadow:
+          0 0 0 55px rgba(205, 238, 222, 0.025),
+          0 0 0 110px rgba(205, 238, 222, 0.02);
+        pointer-events: none;
+      }
+      .auth-story:after {
+        width: 410px;
+        height: 410px;
+        inset: auto auto -260px -190px;
+        box-shadow:
+          0 0 0 45px rgba(205, 238, 222, 0.025),
+          0 0 0 90px rgba(205, 238, 222, 0.02);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: calc(20px * var(--font-scale, 1));
+        font-weight: 800;
+        z-index: 1;
+      }
+      .brand-mark {
+        width: 44px;
+        height: 44px;
+        border-radius: 15px;
+        display: grid;
+        place-items: center;
+        color: white;
+        background: linear-gradient(145deg, #20a394, #08766f);
+        box-shadow: 0 8px 20px rgba(15, 151, 136, 0.25);
+        flex: none;
+      }
+      .brand-mark svg {
+        width: 25px;
+        height: 25px;
+      }
+      .brand small {
+        display: block;
+        color: #a8c4bd;
+        font-size: calc(10px * var(--font-scale, 1));
+        font-weight: 500;
+        margin-top: 4px;
+      }
+      .story-center {
+        position: relative;
+        z-index: 1;
+        max-width: 520px;
+        margin: 32px auto;
+      }
+      .eyebrow {
+        font-size: calc(10px * var(--font-scale, 1));
+        letter-spacing: 0.08em;
+        color: var(--teal);
+        font-weight: 800;
+        margin: 0 0 8px;
+      }
+      .eyebrow.light {
+        color: #a7dcc9;
+      }
+      .story-center h1 {
+        font-size: clamp(38px, 5vw, 64px);
+        line-height: 1.27;
+        letter-spacing: -1.7px;
+        margin: 12px 0 17px;
+      }
+      .story-center > p {
+        color: #c1d6d0;
+        line-height: 2;
+        font-size: calc(15px * var(--font-scale, 1));
+        max-width: 430px;
+      }
+      .visual-stage {
+        height: 245px;
+        position: relative;
+        display: grid;
+        place-items: center;
+        margin-top: 34px;
+      }
+      .orbit {
+        position: absolute;
+        width: 224px;
+        height: 224px;
+        border: 1px solid rgba(206, 237, 224, 0.2);
+        border-radius: 50%;
+      }
+      .orbit.two {
+        width: 300px;
+        height: 300px;
+        border-color: rgba(206, 237, 224, 0.1);
+      }
+      .fingerprint-card {
+        width: 124px;
+        height: 124px;
+        border-radius: 38px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(
+          145deg,
+          rgba(31, 152, 135, 0.37),
+          rgba(31, 93, 90, 0.3)
+        );
+        border: 1px solid rgba(211, 243, 227, 0.2);
+        box-shadow: 0 0 65px rgba(36, 179, 147, 0.2);
+        transform: rotate(-8deg);
+      }
+      .fingerprint-card svg {
+        width: 64px;
+        height: 64px;
+        transform: rotate(8deg);
+        color: #d7f5e5;
+      }
+      .float-card {
+        position: absolute;
+        border: 1px solid rgba(220, 241, 233, 0.2);
+        background: rgba(28, 72, 72, 0.82);
+        border-radius: 13px;
+        padding: 11px 14px;
+        color: #bad0c9;
+        font-size: calc(10px * var(--font-scale, 1));
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(8px);
+      }
+      .float-card b {
+        display: block;
+        color: #fff;
+        font-size: calc(13px * var(--font-scale, 1));
+        margin-top: 5px;
+      }
+      .float-one {
+        top: 20px;
+        right: 8%;
+      }
+      .float-two {
+        bottom: 8px;
+        left: 7%;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        background: #a5ce77;
+        box-shadow: 0 0 0 4px rgba(165, 206, 119, 0.13);
+      }
+      .story-footer {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        color: #86a6a0;
+        font-size: calc(10px * var(--font-scale, 1));
+      }
+      .auth-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 8%;
+        background: radial-gradient(ellipse at 50% 0%, #f1f8f5, white 58%);
+      }
+      .auth-card {
+        width: min(430px, 100%);
+      }
+      .auth-card h2 {
+        font-size: calc(30px * var(--font-scale, 1));
+        letter-spacing: -0.7px;
+        margin: 5px 0 9px;
+      }
+      .muted {
+        color: var(--muted);
+        line-height: 1.9;
+        margin: 0;
+      }
+      .auth-form {
+        margin-top: 27px;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+      .field-label {
+        font-size: calc(12px * var(--font-scale, 1));
+        color: #38585a;
+        font-weight: 750;
+        display: block;
+        margin: 7px 0 0;
+      }
+      .field-wrap {
+        height: 51px;
+        border: 1px solid #e0e9e5;
+        border-radius: 12px;
+        background: #fbfdfc;
+        display: flex;
+        align-items: center;
+        padding: 0 13px;
+        gap: 10px;
+        transition: 0.2s;
+      }
+      .field-wrap:focus-within {
+        border-color: #78b9aa;
+        box-shadow: 0 0 0 4px rgba(19, 135, 127, 0.09);
+      }
+      .field-wrap svg {
+        width: 18px;
+        height: 18px;
+        color: #94aaa5;
+        flex: none;
+      }
+      .field-wrap input {
+        border: 0;
+        outline: 0;
+        background: transparent;
+        min-width: 0;
+        flex: 1;
+        color: var(--ink);
+        direction: rtl;
+      }
+      .field-wrap input::placeholder {
+        color: #a7b5b2;
+        font-size: calc(12px * var(--font-scale, 1));
+      }
+      .hint {
+        font-size: calc(10px * var(--font-scale, 1));
+        color: #9aa9a6;
+        margin: 0;
+      }
+      .btn {
+        min-height: 44px;
+        border: 1px solid transparent;
+        border-radius: 11px;
+        padding: 0 17px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        font-weight: 750;
+        font-size: calc(12px * var(--font-scale, 1));
+        transition:
+          transform 0.16s,
+          background 0.16s,
+          box-shadow 0.16s,
+          border-color 0.16s;
+      }
+      .btn:hover:not(:disabled) {
+        transform: translateY(-1px);
+      }
+      .btn-primary {
+        background: var(--teal);
+        color: white;
+        box-shadow: 0 7px 18px rgba(19, 135, 127, 0.17);
+      }
+      .btn-primary:hover:not(:disabled) {
+        background: var(--teal-dark);
+        box-shadow: 0 9px 22px rgba(19, 135, 127, 0.25);
+      }
+      .btn-dark {
+        background: var(--ink);
+        color: white;
+      }
+      .btn-outline {
+        background: white;
+        border-color: #dce7e3;
+        color: var(--ink);
+      }
+      .btn-outline:hover:not(:disabled) {
+        border-color: #91c3b6;
+        background: #f6fbf8;
+      }
+      .btn-soft {
+        background: #edf6f2;
+        color: #287d70;
+        border-color: #e0eee8;
+      }
+      .btn-danger-soft {
+        background: #fff4f1;
+        color: #ae554e;
+        border-color: #f3ded9;
+      }
+      .btn-wide {
+        width: 100%;
+        min-height: 50px;
+        margin-top: 10px;
+      }
+      .btn-icon {
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        background: white;
+        color: #66817d;
+        display: grid;
+        place-items: center;
+      }
+      .btn-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+      .auth-note {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: calc(10px * var(--font-scale, 1));
+        color: #91a29e;
+        margin-top: 20px;
+      }
+      .auth-message {
+        min-height: 16px;
+        color: var(--red);
+        font-size: calc(11px * var(--font-scale, 1));
+        margin: 1px 0;
+      }
+      .setup-tip {
+        padding: 13px 14px;
+        background: #eef7f3;
+        border: 1px solid #e3f0ea;
+        color: #5b7770;
+        border-radius: 12px;
+        font-size: calc(11px * var(--font-scale, 1));
+        line-height: 1.8;
+        margin: 17px 0;
+      }
+      .local-warning {
+        font-size: calc(10px * var(--font-scale, 1));
+        line-height: 1.8;
+        color: #8d9d99;
+        background: #fbf7ed;
+        border: 1px solid #f2ead6;
+        border-radius: 11px;
+        padding: 10px 12px;
+        margin-top: 16px;
+      }
+      .reset-local {
+        display: block;
+        margin: 14px auto 0;
+        border: 0;
+        background: transparent;
+        color: #8b9d99;
+        text-decoration: underline;
+        font-size: calc(10px * var(--font-scale, 1));
+      }
+      .app-shell {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 258px minmax(0, 1fr);
+      }
+      .sidebar {
+        background: var(--nav);
+        color: #dbe9e5;
+        min-height: 100vh;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        padding: 24px 15px 16px;
+        display: flex;
+        flex-direction: column;
+        z-index: 20;
+      }
+      .sidebar .brand {
+        padding: 0 8px 23px;
+      }
+      .sidebar .brand-mark {
+        width: 40px;
+        height: 40px;
+      }
+      .sidebar .brand small {
+        font-size: calc(9px * var(--font-scale, 1));
+      }
+      .workspace {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #87a8a1;
+        font-size: calc(9px * var(--font-scale, 1));
+        padding: 0 11px 12px;
+        letter-spacing: 0.04em;
+      }
+      .workspace .dot {
+        width: 6px;
+        height: 6px;
+      }
+      .nav-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .nav-btn {
+        border: 0;
+        background: transparent;
+        color: #a8bfba;
+        text-align: right;
+        min-height: 44px;
+        padding: 0 12px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        font-size: calc(11px * var(--font-scale, 1));
+        transition: 0.18s;
+      }
+      .nav-btn svg {
+        width: 18px;
+        height: 18px;
+        color: #83a59e;
+        flex: none;
+      }
+      .nav-btn:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: white;
+      }
+      .nav-btn.active {
+        background: rgba(65, 164, 145, 0.19);
+        color: #edfaf3;
+        box-shadow: inset -3px 0 #7ed0b7;
+      }
+      .nav-btn.active svg {
+        color: #afe6cc;
+      }
+      .nav-label {
+        font-size: calc(9px * var(--font-scale, 1));
+        color: #789893;
+        padding: 17px 12px 8px;
+      }
+      .sidebar-bottom {
+        margin-top: auto;
+      }
+      .sidebar-help {
+        display: flex;
+        gap: 9px;
+        padding: 12px;
+        margin: 0 2px 15px;
+        border: 1px solid rgba(214, 237, 226, 0.1);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.045);
+      }
+      .help-icon {
+        width: 20px;
+        height: 20px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 1px solid #58877c;
+        color: #a7d8bf;
+        font-size: calc(11px * var(--font-scale, 1));
+        flex: none;
+      }
+      .sidebar-help strong {
+        font-size: calc(10px * var(--font-scale, 1));
+        color: #e7f3ed;
+      }
+      .sidebar-help p {
+        font-size: calc(9px * var(--font-scale, 1));
+        color: #92ada6;
+        line-height: 1.7;
+        margin: 5px 0 0;
+      }
+      .profile-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 13px 4px 0;
+      }
+      .avatar {
+        width: 35px;
+        height: 35px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: #d7ebe0;
+        color: #287264;
+        font-weight: 800;
+        flex: none;
+      }
+      .profile-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .profile-info b {
+        display: block;
+        color: #f2f8f5;
+        font-size: calc(10px * var(--font-scale, 1));
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .profile-info small {
+        display: block;
+        color: #86a39d;
+        font-size: calc(9px * var(--font-scale, 1));
+        margin-top: 4px;
+      }
+      .profile-row .btn-icon {
+        width: 31px;
+        height: 31px;
+        background: transparent;
+        border: 0;
+        color: #8da9a3;
+      }
+      .main-area {
+        min-width: 0;
+        padding: 0 34px 34px;
+        max-width: 100%;
+      }
+      .topbar {
+        min-height: 82px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 22px;
+      }
+      .top-left {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 0;
+      }
+      .mobile-menu {
+        display: none;
+      }
+      .crumb {
+        font-size: calc(9px * var(--font-scale, 1));
+        color: #9aaaa7;
+        margin: 0 0 4px;
+      }
+      .topbar h1 {
+        font-size: calc(18px * var(--font-scale, 1));
+        letter-spacing: -0.3px;
+        margin: 0;
+      }
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .today-chip {
+        font-size: calc(10px * var(--font-scale, 1));
+        color: #708784;
+        border-left: 1px solid #e0e9e5;
+        padding-left: 14px;
+        white-space: nowrap;
+      }
+      .top-avatar {
+        width: 35px;
+        height: 35px;
+        border: 0;
+      }
+      .notice {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 14px;
+        border: 1px solid #dceee5;
+        background: #eef7f2;
+        color: #577a6d;
+        border-radius: 12px;
+        font-size: calc(10px * var(--font-scale, 1));
+        line-height: 1.75;
+        margin-bottom: 24px;
+      }
+      .notice svg {
+        width: 18px;
+        height: 18px;
+        color: #198779;
+        flex: none;
+      }
+      .notice span {
+        flex: 1;
+      }
+      .notice b {
+        color: #287567;
+      }
+      .notice button {
+        border: 0;
+        background: transparent;
+        color: #91aaa1;
+        font-size: calc(17px * var(--font-scale, 1));
+        padding: 0 4px;
+      }
+      .page {
+        display: none;
+        padding-bottom: 20px;
+      }
+      .page.visible {
+        display: block;
+        animation: rise 0.23s ease;
+      }
+      @keyframes rise {
+        from {
+          opacity: 0.5;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .page-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      .page-heading h2 {
+        font-size: calc(21px * var(--font-scale, 1));
+        margin: 0 0 6px;
+        letter-spacing: -0.5px;
+      }
+      .page-heading p {
+        font-size: calc(11px * var(--font-scale, 1));
+      }
+      .page-heading .eyebrow {
+        margin-bottom: 6px;
+      }
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 13px;
+        margin-bottom: 15px;
+      }
+      .stat-card {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px 17px;
+        min-height: 132px;
+        box-shadow: 0 3px 12px rgba(20, 59, 59, 0.02);
+      }
+      .stat-card.featured {
+        background: linear-gradient(145deg, #174448, #13383d);
+        border-color: #174448;
+        color: white;
+      }
+      .stat-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #849795;
+        font-size: calc(10px * var(--font-scale, 1));
+      }
+      .featured .stat-top {
+        color: #b8d2ca;
+      }
+      .stat-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: #edf5f0;
+        color: #1a8c80;
+      }
+      .stat-icon svg {
+        width: 16px;
+        height: 16px;
+      }
+      .icon-amber {
+        background: #f8f1e5;
+        color: #c0934b;
+      }
+      .icon-lime {
+        background: #f0f5e8;
+        color: #7ea04e;
+      }
+      .icon-rose {
+        background: #fcf0ec;
+        color: #c36c5b;
+      }
+      .featured .stat-icon {
+        background: rgba(206, 238, 219, 0.14);
+        color: #cfe8c1;
+      }
+      .stat-number {
+        display: block;
+        font-size: calc(28px * var(--font-scale, 1));
+        font-weight: 750;
+        letter-spacing: -0.8px;
+        margin: 12px 0 4px;
+      }
+      .stat-foot {
+        font-size: calc(9px * var(--font-scale, 1));
+        color: #9baba8;
+      }
+      .featured .stat-foot {
+        color: #aec7c0;
+      }
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(265px, 0.9fr);
+        gap: 14px;
+        margin-bottom: 15px;
+      }
+      .panel {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: 0 3px 13px rgba(20, 59, 59, 0.025);
+      }
+      .panel-pad {
+        padding: 18px 19px;
+      }
+      .panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+      .panel-head h3 {
+        font-size: calc(13px * var(--font-scale, 1));
+        margin: 0;
+      }
+      .panel-head .eyebrow {
+        font-size: calc(9px * var(--font-scale, 1));
+        margin-bottom: 4px;
+      }
+      .panel-tag {
+        font-size: calc(9px * var(--font-scale, 1));
+        color: #92a29f;
+        background: #f5f8f6;
+        border-radius: 30px;
+        padding: 6px 9px;
+        white-space: nowrap;
+      }
+      .chart-area {
+        height: 168px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-around;
+        gap: 13px;
+        padding: 15px 8px 0;
+        border-bottom: 1px solid #eef2f0;
+        position: relative;
+      }
+      .chart-area:before,
+      .chart-area:after {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        border-top: 1px dashed #edf2ef;
+        pointer-events: none;
+      }
+      .chart-area:before {
+        top: 33%;
+      }
+      .chart-area:after {
+        top: 66%;
+      }
+      .chart-empty {
+        align-self: center;
+        color: #a6b3b0;
+        font-size: calc(10px * var(--font-scale, 1));
+        z-index: 1;
+      }
+      .chart-col {
+        height: 100%;
+        min-width: 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 7px;
+        z-index: 1;
+      }
+      .chart-bar {
+        width: min(30px, 70%);
+        min-height: 5px;
+        border-radius: 8px 8px 3px 3px;
+        background: linear-gradient(180deg, #9bd1ad, #208f83);
+        transition: height 0.3s;
+      }
+      .chart-col small {
+        font-size: calc(8px * var(--font-scale, 1));
+        color: #91a19e;
+      }
+      .chart-legend {
+        padding-top: 11px;
+        display: flex;
+        justify-content: space-between;
+        color: #91a29f;
+        font-size: calc(9px * var(--font-scale, 1));
+      }
+      .chart-legend span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .legend-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #2b9f8b;
+      }
+      .chart-legend button {
+        border: 0;
+        background: transparent;
+        color: var(--teal);
+        font-size: calc(9px * var(--font-scale, 1));
+        font-weight: 750;
+      }
+      .site-row {
+        margin-bottom: 17px;
+      }
+      .site-row:last-child {
+        margin-bottom: 7px;
+      }
+      .site-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: calc(10px * var(--font-scale, 1));
+        margin-bottom: 7px;
+      }
+      .site-label span {
+        color: #657f7d;
+      }
+      .site-label b {
+        color: #3c5b5c;
+      }
+      .site-track {
+        height: 8px;
+        background: #f0f4f2;
+        border-radius: 20px;
+        overflow: hidden;
+      }
+      .site-track i {
+        height: 100%;
+        display: block;
+        border-radius: 20px;
+        background: #188d80;
+        transition: width 0.3s;
+      }
+      .site-row:nth-of-type(2) .site-track i {
+        background: #98bd72;
+      }
+      .site-row:nth-of-type(3) .site-track i {
+        background: #d6a65d;
+      }
+      .site-foot {
+        border-top: 1px solid #edf1ef;
+        margin-top: 12px;
+        padding-top: 12px;
+        color: #9aaba6;
+        font-size: calc(9px * var(--font-scale, 1));
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .site-foot .dot {
+        width: 6px;
+        height: 6px;
+      }
+      .table-panel {
+        padding: 17px 19px 4px;
+      }
+      .table-scroll {
+        width: 100%;
+        overflow: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 610px;
+        text-align: right;
+      }
+      thead th {
+        font-size: calc(9px * var(--font-scale, 1));
+        font-weight: 650;
+        color: #8c9d9a;
+        background: #fbfcfb;
+        border-block: 1px solid #eef2f0;
+        padding: 11px 12px;
+        white-space: nowrap;
+      }
+      tbody td {
+        font-size: calc(10px * var(--font-scale, 1));
+        color: #627a78;
+        border-bottom: 1px solid #f0f3f1;
+        padding: 11px 12px;
+        white-space: nowrap;
+      }
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+      .person {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+      .person-badge {
+        width: 29px;
+        height: 29px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        background: #e7f2ec;
+        color: #2b796b;
+        font-size: calc(10px * var(--font-scale, 1));
+        font-weight: 800;
+      }
+      .person strong {
+        display: block;
+        color: #315558;
+        font-size: calc(10px * var(--font-scale, 1));
+      }
+      .person small {
+        display: block;
+        color: #9aa9a7;
+        font-size: calc(8px * var(--font-scale, 1));
+        margin-top: 3px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 20px;
+        padding: 5px 8px;
+        font-size: calc(8px * var(--font-scale, 1));
+        font-weight: 700;
+      }
+      .pill-in {
+        background: #eaf6ee;
+        color: #528b62;
+      }
+      .pill-out {
+        background: #f1f3f5;
+        color: #74828a;
+      }
+      .pill-open {
+        background: #fff5e5;
+        color: #ae7c31;
+      }
+      .pill i {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        flex-wrap: wrap;
+      }
+      .search-box {
+        height: 39px;
+        min-width: min(260px, 100%);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 11px;
+        background: white;
+        border: 1px solid #e4ece8;
+        border-radius: 10px;
+      }
+      .search-box svg {
+        width: 16px;
+        height: 16px;
+        color: #93a6a1;
+        flex: none;
+      }
+      .search-box input {
+        border: 0;
+        outline: 0;
+        min-width: 0;
+        width: 100%;
+        background: transparent;
+        color: var(--ink);
+        font-size: calc(10px * var(--font-scale, 1));
+      }
+      .select {
+        height: 39px;
+        border: 1px solid #e2ebe7;
+        border-radius: 10px;
+        background: white;
+        color: #4d6a69;
+        padding: 0 11px;
+        font-size: calc(10px * var(--font-scale, 1));
+        min-width: 110px;
+        outline: 0;
+      }
+      .select:focus,
+      .control:focus {
+        border-color: #7db9ad;
+        box-shadow: 0 0 0 3px rgba(19, 135, 127, 0.08);
+      }
+      .control {
+        height: 42px;
+        border: 1px solid #e1eae6;
+        border-radius: 10px;
+        background: white;
+        padding: 0 11px;
+        color: var(--ink);
+        outline: 0;
+        font-size: calc(11px * var(--font-scale, 1));
+        min-width: 0;
+      }
+      .employee-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 15px;
+      }
+      .employee-card {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        padding: 15px;
+      }
+      .employee-card-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .employee-card .person-badge {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        font-size: calc(13px * var(--font-scale, 1));
+      }
+      .employee-card h3 {
+        font-size: calc(12px * var(--font-scale, 1));
+        margin: 0 0 4px;
+      }
+      .employee-card p {
+        margin: 0;
+        color: #8b9d99;
+        font-size: calc(9px * var(--font-scale, 1));
+      }
+      .employee-meta {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+      .employee-meta span {
+        border-radius: 20px;
+        background: #f5f8f6;
+        color: #68807c;
+        padding: 5px 8px;
+        font-size: calc(9px * var(--font-scale, 1));
+      }
+      .employee-card-foot {
+        border-top: 1px solid #edf1ef;
+        margin-top: 13px;
+        padding-top: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .employee-card-foot small {
+        font-size: calc(9px * var(--font-scale, 1));
+        color: #8a9d99;
+      }
+      .link-button {
+        border: 0;
+        background: transparent;
+        color: var(--teal);
+        font-size: calc(9px * var(--font-scale, 1));
+        font-weight: 750;
+      }
+      .empty-state {
+        padding: 34px 16px;
+        text-align: center;
+        border: 1px dashed #d8e6e0;
+        background: #fbfdfc;
+        border-radius: 15px;
+        color: #8fa09b;
+        margin-top: 14px;
+      }
+      .empty-icon {
+        width: 43px;
+        height: 43px;
+        border-radius: 14px;
+        background: #eaf5ef;
+        color: #18877b;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 10px;
+      }
+      .empty-icon svg {
+        width: 20px;
+        height: 20px;
+      }
+      .empty-state h3 {
+        font-size: calc(13px * var(--font-scale, 1));
+        color: #3b5b5b;
+        margin: 0 0 6px;
+      }
+      .empty-state p {
+        font-size: calc(10px * var(--font-scale, 1));
+        line-height: 1.8;
+        margin: 0 0 12px;
+      }
+      .site-settings-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+        margin: 8px 0;
+      }
+      .site-setting-row {
+        display: flex;
+        align-items: end;
+        gap: 8px;
+        border: 1px solid #e8efec;
+        border-radius: 11px;
+        padding: 9px;
+        background: #fbfcfb;
+      }
+      .site-setting-row .settings-field {
+        flex: 1;
+        min-width: 0;
+      }
+      .site-setting-row .settings-field input {
+        width: 100%;
+      }
+      .site-remove {
+        flex: 0 0 auto;
+        padding: 0 10px;
+        min-height: 38px;
+      }
+      .site-in-use {
+        font-size: calc(8px * var(--font-scale, 1));
+        color: #849894;
+        max-width: 95px;
+        line-height: 1.4;
+      }
+      .add-site-button {
+        margin-top: 8px;
+      }
+      .device-import-site {
+        margin: 10px 0;
+      }
+      .device-state {
+        flex-wrap: wrap;
+      }
+      .report-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin: 15px 0;
+      }
+      .mini-stat {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        padding: 13px 15px;
+      }
+      .mini-stat span {
+        display: block;
+        color: #889b98;
+        font-size: calc(9px * var(--font-scale, 1));
+      }
+      .mini-stat b {
+        display: block;
+        font-size: calc(20px * var(--font-scale, 1));
+        margin-top: 8px;
+      }
+      .mini-stat small {
+        font-size: calc(10px * var(--font-scale, 1));
+        color: #829693;
+        font-weight: 500;
+      }
+      .report-filters {
+        display: flex;
+        align-items: end;
+        gap: 10px;
+        flex-wrap: wrap;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 13px;
+      }
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .filter-group label {
+        font-size: calc(9px * var(--font-scale, 1));
+        color: #819592;
+      }
+      .report-filters .select,
+      .report-filters .control {
+        min-width: 130px;
+      }
+      .filter-hint {
+        font-size: calc(9px * var(--font-scale, 1));
+        color: #8c9d98;
+        margin: 10px 2px 0;
+      }
+      .punch-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(270px, 0.75fr);
+        gap: 15px;
+      }
+      .punch-card {
+        padding: 21px;
+      }
+      .punch-step {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 17px 0 8px;
+      }
+      .step-num {
+        width: 25px;
+        height: 25px;
+        border-radius: 8px;
+        background: #e9f5ef;
+        color: #258575;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: calc(10px * var(--font-scale, 1));
+      }
+      .punch-step strong {
+        font-size: calc(11px * var(--font-scale, 1));
+      }
+      .punch-select {
+        width: 100%;
+        height: 45px;
+        border: 1px solid #e2ebe7;
+        border-radius: 11px;
+        background: #fff;
+        color: var(--ink);
+        padding: 0 12px;
+        outline: 0;
+      }
+      .location-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 9px;
+      }
+      .location-option {
+        border: 1px solid #e5ede9;
+        background: white;
+        border-radius: 12px;
+        padding: 12px 9px;
+        text-align: right;
+        color: #617b78;
+        transition: 0.15s;
+      }
+      .location-option:hover {
+        border-color: #9acabc;
+        background: #f8fcfa;
+      }
+      .location-option.selected {
+        border-color: #58a99a;
+        background: #edf7f1;
+        box-shadow: 0 0 0 3px rgba(19, 135, 127, 0.07);
+      }
+      .location-option b {
+        display: block;
+        font-size: calc(10px * var(--font-scale, 1));
+        color: #345c59;
+      }
+      .location-option small {
+        display: block;
+        font-size: calc(8px * var(--font-scale, 1));
+        color: #98a9a5;
+        margin-top: 5px;
+      }
+      .location-symbol {
+        width: 27px;
+        height: 27px;
+        border-radius: 9px;
+        background: #f1f6f3;
+        color: #258b7d;
+        display: grid;
+        place-items: center;
+        margin-bottom: 10px;
+      }
+      .location-option.selected .location-symbol {
+        background: #dcefe5;
+      }
+      .location-symbol svg {
+        width: 15px;
+        height: 15px;
+      }
+      .punch-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 19px;
+      }
+      .punch-actions .btn {
+        min-height: 47px;
+      }
+      .punch-note {
+        font-size: calc(9px * var(--font-scale, 1));
+        color: #91a29e;
+        line-height: 1.8;
+        margin: 12px 0 0;
+      }
+      .punch-side {
+        padding: 22px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 350px;
+      }
+      .finger-ring {
+        width: 120px;
+        height: 120px;
+        border-radius: 38px;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(circle, #e5f3ed, #f4faf7);
+        border: 1px solid #dceee5;
+        color: #18887b;
+        margin-bottom: 17px;
+        box-shadow:
+          0 0 0 16px rgba(230, 244, 237, 0.45),
+          0 0 0 32px rgba(230, 244, 237, 0.22);
+      }
+      .finger-ring svg {
+        width: 53px;
+        height: 53px;
+      }
+      .punch-side h3 {
+        font-size: calc(17px * var(--font-scale, 1));
+        margin: 4px 0 7px;
+      }
+      .punch-side .muted {
+        font-size: calc(10px * var(--font-scale, 1));
+        max-width: 250px;
+      }
+      .device-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border-radius: 30px;
+        background: #f5f7f6;
+        padding: 7px 10px;
+        color: #7b908b;
+        font-size: calc(9px * var(--font-scale, 1));
+        margin-top: 16px;
+      }
+      .quick-steps {
+        width: 100%;
+        text-align: right;
+        margin-top: 22px;
+        border-top: 1px solid #edf1ef;
+        padding-top: 14px;
+      }
+      .quick-steps strong {
+        font-size: calc(10px * var(--font-scale, 1));
+      }
+      .quick-steps p {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-size: calc(9px * var(--font-scale, 1));
+        color: #80928e;
+        line-height: 1.6;
+        margin: 10px 0 0;
+      }
+      .quick-steps i {
+        width: 18px;
+        height: 18px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: #eaf5ef;
+        color: #228577;
+        font-style: normal;
+        font-weight: 800;
+        flex: none;
+      }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(11, 35, 37, 0.46);
+        backdrop-filter: blur(3px);
+        z-index: 80;
+        display: grid;
+        place-items: center;
+        padding: 18px;
+      }
+      .dialog-card {
+        width: min(460px, 100%);
+        background: white;
+        border-radius: 18px;
+        padding: 21px;
+        box-shadow: 0 24px 80px rgba(13, 44, 45, 0.25);
+      }
+      .dialog-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+      }
+      .dialog-head h3 {
+        font-size: calc(16px * var(--font-scale, 1));
+        margin: 0;
+      }
+      .dialog-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .dialog-form .wide {
+        grid-column: 1/-1;
+      }
+      .dialog-form label {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        color: #748b87;
+        font-size: calc(9px * var(--font-scale, 1));
+      }
+      .dialog-form input {
+        height: 42px;
+        border: 1px solid #e2ebe7;
+        border-radius: 10px;
+        padding: 0 10px;
+        outline: 0;
+        font-size: calc(11px * var(--font-scale, 1));
+      }
+      .dialog-form input:focus {
+        border-color: #7db9ad;
+        box-shadow: 0 0 0 3px rgba(19, 135, 127, 0.08);
+      }
+      .dialog-actions {
+        display: flex;
+        justify-content: flex-start;
+        gap: 8px;
+        margin-top: 17px;
+      }
+      .toast-stack {
+        position: fixed;
+        left: 18px;
+        bottom: 18px;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .toast {
+        min-width: 220px;
+        max-width: min(360px, calc(100vw - 36px));
+        border-radius: 12px;
+        padding: 12px 14px;
+        background: #173e41;
+        color: #f3fbf6;
+        box-shadow: 0 12px 35px rgba(12, 46, 45, 0.18);
+        font-size: calc(11px * var(--font-scale, 1));
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        animation: rise 0.2s ease;
+      }
+      .toast.error {
+        background: #9e4844;
+      }
+      .toast.success {
+        background: #1c796e;
+      }
+      .toast i {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #b8e18b;
+        flex: none;
+      }
+      .mobile-overlay {
+        display: none;
+      }
+      @media (max-width: 1100px) {
+        .main-area {
+          padding-inline: 23px;
+        }
+        .stat-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .dashboard-grid {
+          grid-template-columns: minmax(0, 1.3fr) minmax(245px, 0.9fr);
+        }
+        .employee-cards {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 820px) {
+        .app-shell {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          position: fixed;
+          right: 0;
+          top: 0;
+          width: 265px;
+          transform: translateX(110%);
+          transition: transform 0.22s;
+          box-shadow: -20px 0 50px rgba(0, 0, 0, 0.14);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .mobile-overlay.visible {
+          display: block;
+          position: fixed;
+          inset: 0;
+          background: rgba(8, 29, 30, 0.42);
+          z-index: 15;
+        }
+        .mobile-menu {
+          display: grid;
+        }
+        .main-area {
+          padding: 0 18px 24px;
+        }
+        .topbar {
+          min-height: 70px;
+        }
+        .punch-layout {
+          grid-template-columns: 1fr;
+        }
+        .punch-side {
+          min-height: 250px;
+        }
+        .punch-side .quick-steps {
+          max-width: 520px;
+        }
+        .auth-view {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .auth-story {
+          display: none;
+        }
+        .auth-panel {
+          min-height: 100vh;
+          padding: 30px 24px;
+        }
+        .auth-card {
+          max-width: 440px;
+        }
+      }
+      @media (max-width: 560px) {
+        .main-area {
+          padding-inline: 13px;
+        }
+        .topbar {
+          margin-bottom: 17px;
+        }
+        .today-chip {
+          display: none;
+        }
+        .topbar h1 {
+          font-size: calc(15px * var(--font-scale, 1));
+        }
+        .notice {
+          align-items: flex-start;
+          font-size: calc(9px * var(--font-scale, 1));
+          padding: 10px;
+        }
+        .page-heading {
+          align-items: flex-start;
+          flex-direction: column;
+          margin-bottom: 15px;
+        }
+        .page-heading .btn {
+          width: 100%;
+        }
+        .stat-grid {
+          gap: 9px;
+        }
+        .stat-card {
+          padding: 13px;
+          min-height: 117px;
+        }
+        .stat-number {
+          font-size: calc(24px * var(--font-scale, 1));
+        }
+        .stat-top {
+          font-size: calc(9px * var(--font-scale, 1));
+        }
+        .stat-icon {
+          width: 27px;
+          height: 27px;
+        }
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+        .panel-pad,
+        .table-panel {
+          padding: 14px;
+        }
+        .chart-area {
+          height: 145px;
+        }
+        .employee-cards {
+          grid-template-columns: 1fr;
+        }
+        .toolbar {
+          width: 100%;
+        }
+        .toolbar .search-box {
+          width: 100%;
+          min-width: 0;
+        }
+        .toolbar .select {
+          flex: 1;
+          min-width: 0;
+        }
+        .report-filters {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        .report-filters .filter-group {
+          min-width: 0;
+        }
+        .report-filters .control,
+        .report-filters .select {
+          min-width: 0;
+          width: 100%;
+        }
+        .report-filters .btn {
+          grid-column: 1/-1;
+        }
+        .report-stats {
+          gap: 7px;
+        }
+        .mini-stat {
+          padding: 10px;
+        }
+        .mini-stat b {
+          font-size: calc(16px * var(--font-scale, 1));
+        }
+        .location-grid {
+          gap: 6px;
+        }
+        .location-option {
+          padding: 10px 7px;
+        }
+        .punch-actions {
+          grid-template-columns: 1fr;
+        }
+        .dialog-form {
+          grid-template-columns: 1fr;
+        }
+        .dialog-form .wide {
+          grid-column: auto;
+        }
+        .auth-card h2 {
+          font-size: calc(27px * var(--font-scale, 1));
+        }
+        .auth-panel {
+          padding: 26px 21px;
+        }
+        .story-center h1 {
+          font-size: calc(43px * var(--font-scale, 1));
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *:before,
+        *:after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      .settings-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 15px;
+      }
+      .settings-card {
+        padding: 19px;
+      }
+      .settings-card.wide {
+        grid-column: 1/-1;
+      }
+      .settings-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .settings-head h3 {
+        font-size: calc(14px * var(--font-scale, 1));
+        margin: 0 0 5px;
+      }
+      .settings-head p {
+        font-size: calc(10px * var(--font-scale, 1));
+        color: #879b97;
+        line-height: 1.8;
+        margin: 0;
+      }
+      .settings-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .settings-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: calc(10px * var(--font-scale, 1));
+        color: #708783;
+      }
+      .settings-field input,
+      .settings-field select {
+        height: 41px;
+        border: 1px solid #e1eae6;
+        border-radius: 10px;
+        background: white;
+        color: var(--ink);
+        padding: 0 10px;
+        outline: 0;
+      }
+      .settings-field input:focus,
+      .settings-field select:focus {
+        border-color: #7db9ad;
+        box-shadow: 0 0 0 3px rgba(19, 135, 127, 0.08);
+      }
+      .settings-field.full {
+        grid-column: 1/-1;
+      }
+      .workday-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 5px;
+      }
+      .workday-chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 10px;
+        border-radius: 9px;
+        background: #f5f8f6;
+        color: #607b76;
+        font-size: calc(9px * var(--font-scale, 1));
+      }
+      .workday-chip input {
+        accent-color: var(--teal);
+      }
+      .settings-actions {
+        display: flex;
+        justify-content: flex-start;
+        gap: 8px;
+        margin-top: 15px;
+      }
+      .settings-note {
+        margin-top: 12px;
+        padding: 10px 12px;
+        background: #f8faf8;
+        border: 1px solid #edf2ee;
+        border-radius: 10px;
+        color: #829691;
+        font-size: calc(9px * var(--font-scale, 1));
+        line-height: 1.8;
+      }
+      .device-warning {
+        padding: 12px 14px;
+        background: #fff7e9;
+        border: 1px solid #f2e5c7;
+        border-radius: 12px;
+        color: #8c703b;
+        font-size: calc(10px * var(--font-scale, 1));
+        line-height: 1.9;
+        margin-bottom: 14px;
+      }
+      .device-state {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 11px 12px;
+        background: #f5f8f6;
+        border-radius: 11px;
+        color: #607b76;
+        font-size: calc(10px * var(--font-scale, 1));
+        margin-top: 12px;
+      }
+      .backup-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
+      .import-label {
+        position: relative;
+        overflow: hidden;
+      }
+      .import-label input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .report-stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .detail-table {
+        min-width: 860px;
+      }
+      .late-cell {
+        color: #b36b3c;
+        font-weight: 750;
+      }
+      body.dark-mode {
+        --canvas: #101b1d;
+        --ink: #e7f1ed;
+        --ink-soft: #bed0ca;
+        --muted: #a1b4ae;
+        --line: #293a3b;
+        background: #101b1d;
+        color: #e7f1ed;
+      }
+      body.dark-mode .main-area {
+        background: #101b1d;
+      }
+      body.dark-mode .topbar {
+        border-color: #2b3b3c;
+      }
+      body.dark-mode .crumb,
+      body.dark-mode .muted,
+      body.dark-mode .stat-foot,
+      body.dark-mode .filter-hint,
+      body.dark-mode .settings-head p {
+        color: #9aafaa;
+      }
+      body.dark-mode .panel,
+      body.dark-mode .stat-card:not(.featured),
+      body.dark-mode .mini-stat,
+      body.dark-mode .report-filters,
+      body.dark-mode .settings-card,
+      body.dark-mode .employee-card,
+      body.dark-mode .search-box {
+        background: #172527;
+        border-color: #2b3c3d;
+        color: #e5efeb;
+      }
+      body.dark-mode .panel-tag,
+      body.dark-mode .workday-chip,
+      body.dark-mode .settings-note,
+      body.dark-mode .device-state {
+        background: #203133;
+        color: #afc3bd;
+        border-color: #344748;
+      }
+      body.dark-mode .settings-field input,
+      body.dark-mode .settings-field select,
+      body.dark-mode .select,
+      body.dark-mode .control,
+      body.dark-mode .punch-select,
+      body.dark-mode .field-wrap {
+        background: #172527;
+        border-color: #354748;
+        color: #e7f1ed;
+      }
+      body.dark-mode .search-box input,
+      body.dark-mode .settings-field input::placeholder {
+        color: #e7f1ed;
+      }
+      body.dark-mode thead th {
+        background: #1b2b2d;
+        color: #a8bdb6;
+        border-color: #304143;
+      }
+      body.dark-mode tbody td {
+        color: #c0d0ca;
+        border-color: #293a3b;
+      }
+      body.dark-mode .person strong,
+      body.dark-mode .settings-head h3,
+      body.dark-mode .panel-head h3,
+      body.dark-mode .page-heading h2 {
+        color: #e6f1ed;
+      }
+      body.dark-mode .empty-state {
+        background: #172527;
+        border-color: #354748;
+        color: #b2c2bd;
+      }
+      body.dark-mode .empty-state h3 {
+        color: #e1ece7;
+      }
+      body.dark-mode .location-option {
+        background: #172527;
+        border-color: #354748;
+        color: #c4d4ce;
+      }
+      body.dark-mode .location-option.selected {
+        background: #1e3835;
+        border-color: #4c9588;
+      }
+      body.dark-mode .topbar .btn-icon,
+      body.dark-mode .btn-outline {
+        background: #172527;
+        color: #d8e6e0;
+        border-color: #354748;
+      }
+      body.dark-mode .employee-meta span {
+        background: #203133;
+        color: #bdd0c9;
+      }
+      body.dark-mode .site-track,
+      body.dark-mode .chart-area {
+        border-color: #304143;
+        background-color: #1c2a2c;
+      }
+      body.dark-mode .chart-area:before,
+      body.dark-mode .chart-area:after {
+        border-color: #304143;
+      }
+      @media (max-width: 900px) {
+        .settings-grid {
+          grid-template-columns: 1fr;
+        }
+        .settings-card.wide {
+          grid-column: auto;
+        }
+      }
+      @media (max-width: 560px) {
+        .site-settings-list {
+          grid-template-columns: 1fr;
+        }
+        .report-stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .settings-form-grid {
+          grid-template-columns: 1fr;
+        }
+        .settings-field.full {
+          grid-column: auto;
+        }
+        .settings-card {
+          padding: 14px;
+        }
+      }
+
+      .heading-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .font-size-tools {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        direction: ltr;
+        padding: 3px 5px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: white;
+        color: var(--ink-soft);
+        font-size: 10px;
+        font-weight: 700;
+      }
+      .font-size-tools .btn-icon {
+        width: 31px;
+        min-width: 31px;
+        height: 31px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .auto-sync-panel {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 10px 16px;
+        border: 1px solid #dfece6;
+        border-radius: 13px;
+        padding: 13px;
+        margin: 12px 0;
+        background: #f8fcf9;
+      }
+      .auto-sync-panel p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.7;
+      }
+      .auto-sync-panel small {
+        grid-column: 1 / -1;
+        color: var(--muted);
+        font-size: 9px;
+        line-height: 1.7;
+      }
+      .auto-sync-actions {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-wrap: wrap;
+      }
+      .auto-sync-actions .select {
+        min-width: 116px;
+        width: auto;
+      }
+      .print-only {
+        display: none;
+      }
+      @media (max-width: 760px) {
+        .top-actions {
+          gap: 6px;
+        }
+        .today-chip {
+          display: none;
+        }
+        .heading-actions {
+          width: 100%;
+          justify-content: flex-start;
+        }
+        .heading-actions .btn {
+          flex: 1 1 auto;
+        }
+        .auto-sync-panel {
+          grid-template-columns: 1fr;
+        }
+        .auto-sync-actions .btn {
+          flex: 1 1 auto;
+        }
+      }
+      @media print {
+        @page {
+          size: A4 landscape;
+          margin: 10mm;
+        }
+        :root {
+          --font-scale: 1 !important;
+        }
+        html,
+        body {
+          min-width: 0 !important;
+          min-height: 0 !important;
+          background: #fff !important;
+          overflow: visible !important;
+        }
+        body * {
+          visibility: hidden !important;
+        }
+        #appView,
+        .main-area,
+        #page-reports,
+        #page-reports * {
+          visibility: visible !important;
+        }
+        #appView {
+          display: block !important;
+          position: static !important;
+          width: auto !important;
+          height: auto !important;
+        }
+        .sidebar,
+        .topbar,
+        .notice,
+        .mobile-overlay,
+        .report-filters,
+        .filter-hint,
+        .heading-actions {
+          display: none !important;
+        }
+        .main-area {
+          display: block !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 100% !important;
+          height: auto !important;
+          overflow: visible !important;
+        }
+        .page:not(#page-reports) {
+          display: none !important;
+        }
+        #page-reports {
+          display: block !important;
+          position: static !important;
+          width: 100% !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          color: #111 !important;
+        }
+        #page-reports .page-heading {
+          margin: 0 0 5mm !important;
+        }
+        #page-reports .page-heading h2 {
+          color: #111 !important;
+          font-size: 16pt !important;
+        }
+        #page-reports .page-heading p,
+        #page-reports .eyebrow {
+          color: #333 !important;
+        }
+        #page-reports .print-only {
+          display: block !important;
+          margin: 0 0 4mm !important;
+          font-size: 9pt !important;
+          line-height: 1.8 !important;
+          color: #111 !important;
+        }
+        #page-reports .report-stats {
+          display: grid !important;
+          grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+          gap: 3mm !important;
+          margin: 0 0 4mm !important;
+        }
+        #page-reports .mini-stat {
+          background: #fff !important;
+          border: 1px solid #999 !important;
+          box-shadow: none !important;
+          color: #111 !important;
+          break-inside: avoid;
+        }
+        #page-reports .mini-stat * {
+          color: #111 !important;
+        }
+        #page-reports .panel {
+          border: 1px solid #777 !important;
+          box-shadow: none !important;
+          border-radius: 0 !important;
+          break-inside: avoid;
+        }
+        #page-reports .panel-head {
+          margin-bottom: 2mm !important;
+        }
+        #page-reports .panel-head h3,
+        #page-reports .panel-tag {
+          color: #111 !important;
+        }
+        #page-reports .table-scroll {
+          overflow: visible !important;
+          width: 100% !important;
+        }
+        #page-reports table {
+          width: 100% !important;
+          min-width: 0 !important;
+          border-collapse: collapse !important;
+        }
+        #page-reports th,
+        #page-reports td {
+          color: #111 !important;
+          background: #fff !important;
+          border: 1px solid #aaa !important;
+          font-size: 8pt !important;
+          padding: 2mm !important;
+          white-space: normal !important;
+        }
+        #page-reports .pill {
+          border: 1px solid #999 !important;
+          color: #111 !important;
+        }
+        #page-reports .panel + .panel {
+          margin-top: 4mm !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section id="authView" class="auth-view" hidden>
+      <div class="auth-story">
+        <div class="brand">
+          <span class="brand-mark" id="authBrandIcon"></span
+          ><span>دوامي<small>منظومة الحضور والانصراف</small></span>
+        </div>
+        <div class="story-center">
+          <p class="eyebrow light">تنظيم أوضح · متابعة أسهل</p>
+          <h1>كل حضور<br />له حكاية واضحة.</h1>
+          <p>
+            تابع فريقك، راجع ساعات العمل، واعرف موقع كل تسجيل في لوحة واحدة
+            سهلة.
+          </p>
+          <div class="visual-stage">
+            <span class="orbit"></span><span class="orbit two"></span>
+            <div class="fingerprint-card" id="storyFingerprint"></div>
+            <div class="float-card float-one">
+              حركة اليوم<b>تُحفظ على هذا الجهاز</b>
+            </div>
+            <div class="float-card float-two">
+              <i class="dot"></i> مواقع تسجيل متعددة
+            </div>
+          </div>
+        </div>
+        <div class="story-footer">
+          <span>نسخة HTML مستقلة للتجربة</span><span>دوامي ©</span>
+        </div>
+      </div>
+      <div class="auth-panel">
+        <div class="auth-card">
+          <p class="eyebrow" id="authEyebrow">خطوة الإعداد الأولى</p>
+          <h2 id="authTitle">أنشئ حساب المسؤول</h2>
+          <p class="muted" id="authSubtitle">
+            اختر اسمًا وكلمة مرور للدخول إلى منظومتك.
+          </p>
+          <div class="setup-tip" id="setupTip">
+            هذه أول مرة. أنشئ حساب المسؤول بنفسك؛ لن نضع كلمة مرور افتراضية.
+          </div>
+          <form id="setupForm" class="auth-form">
+            <label class="field-label" for="setupName">الاسم الكامل</label>
+            <div class="field-wrap">
+              <span class="field-icon" id="personIcon"></span
+              ><input
+                id="setupName"
+                autocomplete="name"
+                required
+                minlength="2"
+                maxlength="90"
+                placeholder="اسم المسؤول"
+              />
+            </div>
+            <label class="field-label" for="setupUsername">اسم المستخدم</label>
+            <div class="field-wrap">
+              <span class="field-icon" id="userIcon"></span
+              ><input
+                id="setupUsername"
+                autocomplete="username"
+                required
+                minlength="3"
+                maxlength="32"
+                placeholder="مثال: admin"
+              />
+            </div>
+            <label class="field-label" for="setupPassword"
+              >كلمة المرور <span class="hint">10 أحرف على الأقل</span></label
+            >
+            <div class="field-wrap">
+              <span class="field-icon" id="lockIcon"></span
+              ><input
+                id="setupPassword"
+                type="password"
+                autocomplete="new-password"
+                required
+                minlength="10"
+                maxlength="100"
+                placeholder="أنشئ كلمة مرور قوية"
+              /><button
+                type="button"
+                class="btn-icon"
+                data-action="toggle-password"
+                data-target="setupPassword"
+                aria-label="إظهار كلمة المرور"
+                id="eyeSetup"
+              ></button>
+            </div>
+            <p id="setupError" class="auth-message"></p>
+            <button class="btn btn-primary btn-wide" type="submit">
+              إنشاء حساب المسؤول <span>←</span>
+            </button>
+          </form>
+          <form id="loginForm" class="auth-form" hidden>
+            <label class="field-label" for="loginUsername">اسم المستخدم</label>
+            <div class="field-wrap">
+              <span class="field-icon" id="loginUserIcon"></span
+              ><input
+                id="loginUsername"
+                autocomplete="username"
+                required
+                placeholder="اكتب اسم المستخدم"
+              />
+            </div>
+            <label class="field-label" for="loginPassword">كلمة المرور</label>
+            <div class="field-wrap">
+              <span class="field-icon" id="loginLockIcon"></span
+              ><input
+                id="loginPassword"
+                type="password"
+                autocomplete="current-password"
+                required
+                placeholder="اكتب كلمة المرور"
+              /><button
+                type="button"
+                class="btn-icon"
+                data-action="toggle-password"
+                data-target="loginPassword"
+                aria-label="إظهار كلمة المرور"
+                id="eyeLogin"
+              ></button>
+            </div>
+            <p id="loginError" class="auth-message"></p>
+            <button class="btn btn-primary btn-wide" type="submit">
+              تسجيل الدخول <span>←</span></button
+            ><button
+              type="button"
+              class="reset-local"
+              data-action="reset-local"
+            >
+              إعادة ضبط بيانات هذا الجهاز
+            </button>
+          </form>
+          <p class="auth-note">
+            <i class="dot"></i> نموذج محلي · لا توجد كلمة مرور افتراضية
+          </p>
+          <div class="local-warning">
+            تنبيه: هذا الملف مستقل ويحفظ البيانات داخل المتصفح على هذا الجهاز
+            فقط. ليس بديلًا عن خادم آمن، ولا يتصل بقارئ بصمة فعلي.
+          </div>
+        </div>
+      </div>
+    </section>
+    <div id="appView" class="app-shell" hidden>
+      <div
+        id="mobileOverlay"
+        class="mobile-overlay"
+        data-action="close-sidebar"
+      ></div>
+      <aside id="sidebar" class="sidebar">
+        <div class="brand">
+          <span class="brand-mark" id="appBrandIcon"></span
+          ><span>دوامي<small>لوحة إدارة الحضور</small></span>
+        </div>
+        <div class="workspace"><i class="dot"></i> مساحة العمل المحلية</div>
+        <div class="nav-label">القائمة الرئيسية</div>
+        <nav class="nav-list">
+          <button class="nav-btn active" data-page="dashboard">
+            <span class="nav-icon" data-icon="dashboard"></span>نظرة عامة</button
+          ><button class="nav-btn" data-page="punch">
+            <span class="nav-icon" data-icon="fingerprint"></span>تسجيل الحضور</button
+          ><button class="nav-btn" data-page="employees">
+            <span class="nav-icon" data-icon="people"></span>الموظفون
+            <span class="nav-count" id="navEmployeeCount"></span></button
+          ><button class="nav-btn" data-page="reports">
+            <span class="nav-icon" data-icon="chart"></span>التقارير</button
+          ><button class="nav-btn" data-page="settings">
+            <span class="nav-icon" data-icon="activity"></span>الإعدادات
+          </button>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="sidebar-help">
+            <span class="help-icon">؟</span>
+            <div>
+              <strong>ابدأ بخطوة بسيطة</strong>
+              <p>أضف الموظفين أولًا، ثم سجّل دخولهم وانصرافهم.</p>
+            </div>
+          </div>
+          <div class="profile-row">
+            <span class="avatar" id="sideAvatar">م</span
+            ><span class="profile-info"
+              ><b id="sideName">المسؤول</b><small>مدير المنظومة</small></span
+            ><button
+              class="btn-icon"
+              data-action="logout"
+              title="تسجيل الخروج"
+              id="logoutIcon"
+            ></button>
+          </div>
+        </div>
+      </aside>
+      <main class="main-area">
+        <header class="topbar">
+          <div class="top-left">
+            <button
+              class="btn-icon mobile-menu"
+              data-action="open-sidebar"
+              aria-label="القائمة"
+              id="menuIcon"
+            ></button>
+            <div>
+              <p class="crumb">
+                الرئيسية <span>›</span> <b id="crumb">نظرة عامة</b>
+              </p>
+              <h1 id="pageTitle">صباح الخير</h1>
+            </div>
+          </div>
+          <div class="top-actions">
+            <span class="today-chip" id="todayDate"></span>
+            <div class="font-size-tools" role="group" aria-label="حجم الخط">
+              <button
+                type="button"
+                class="btn-icon"
+                data-action="font-decrease"
+                aria-label="تصغير الخط"
+                title="تصغير الخط"
+              >
+                A−
+              </button>
+              <span id="fontScaleLabel">100%</span>
+              <button
+                type="button"
+                class="btn-icon"
+                data-action="font-increase"
+                aria-label="تكبير الخط"
+                title="تكبير الخط"
+              >
+                A+
+              </button>
+            </div>
+            <span class="avatar top-avatar" id="topAvatar">م</span>
+          </div>
+        </header>
+        <div class="notice" id="localNotice">
+          <span id="infoIcon"></span
+          ><span
+            ><b>نسخة تجريبية محلية:</b> بيانات الموظفين والحركات محفوظة في
+            المتصفح الحالي فقط، ويمكنك تصدير التقارير Excel أو PDF أو CSV.</span
+          ><button data-action="dismiss-notice" aria-label="إغلاق">×</button>
+        </div>
+        <section id="page-dashboard" class="page visible">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">ملخص اليوم</p>
+              <h2>نظرة عامة</h2>
+              <p class="muted">هذه لوحة يومك؛ كل حركة واضحة وكل ساعة محسوبة.</p>
+            </div>
+            <button class="btn btn-primary" data-action="go-punch">
+              <span data-icon="fingerprint"></span> تسجيل حضور
+            </button>
+          </div>
+          <div class="stat-grid">
+            <article class="stat-card featured">
+              <div class="stat-top">
+                <span>الموظفون الحاضرون</span
+                ><span class="stat-icon" data-icon="people"></span>
+              </div>
+              <b class="stat-number" id="statPresent">٠</b
+              ><span class="stat-foot" id="statPresentFoot"
+                >لا يوجد حضور مسجل اليوم</span
+              >
+            </article>
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>ساعات العمل اليوم</span
+                ><span class="stat-icon icon-amber" data-icon="clock"></span>
+              </div>
+              <b class="stat-number" id="statHours">٠:٠٠</b
+              ><span class="stat-foot">مجموع ساعات الورديات المسجلة</span>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>إجمالي الموظفين</span
+                ><span class="stat-icon icon-lime" data-icon="people"></span>
+              </div>
+              <b class="stat-number" id="statEmployees">٠</b
+              ><span class="stat-foot" id="statActiveFoot"
+                >موظفون في السجل</span
+              >
+            </article>
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>حركات اليوم</span
+                ><span class="stat-icon icon-rose" data-icon="activity"></span>
+              </div>
+              <b class="stat-number" id="statEvents">٠</b
+              ><span class="stat-foot">حضور وانصراف مسجل</span>
+            </article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel panel-pad">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">آخر سبعة أيام</p>
+                  <h3>حركة الحضور والانصراف</h3>
+                </div>
+                <span class="panel-tag">عدد الحركات</span>
+              </div>
+              <div id="weekChart" class="chart-area"></div>
+              <div class="chart-legend">
+                <span><i class="legend-dot"></i> حركة مسجلة</span
+                ><button data-page="reports">عرض التقارير ←</button>
+              </div>
+            </article>
+            <article class="panel panel-pad">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">توزيع التسجيل</p>
+                  <h3>مواقع العمل</h3>
+                </div>
+                <span class="panel-tag">اليوم</span>
+              </div>
+              <div id="siteBars"></div>
+              <div class="site-foot">
+                <i class="dot"></i> كل حركة مرتبطة بالموقع الذي اخترته
+              </div>
+            </article>
+          </div>
+          <article class="panel table-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">آخر الحركات</p>
+                <h3>سجل اليوم</h3>
+              </div>
+              <button class="link-button" data-page="punch">كل السجل ←</button>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>الموظف</th>
+                    <th>الحركة</th>
+                    <th>الوقت</th>
+                    <th>الموقع</th>
+                    <th>الحالة</th>
+                  </tr>
+                </thead>
+                <tbody id="recentRows"></tbody>
+              </table>
+            </div>
+          </article>
+          <div class="empty-state" id="dashboardEmpty" hidden>
+            <span class="empty-icon" data-icon="people"></span>
+            <h3>ابدأ بإضافة أول موظف</h3>
+            <p>بعد الإضافة، اختر الموظف والموقع وسجّل الحضور أو الانصراف.</p>
+            <button class="btn btn-primary" data-action="open-employee">
+              إضافة موظف
+            </button>
+          </div>
+        </section>
+        <section id="page-punch" class="page">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">تسجيل سريع</p>
+              <h2>الحضور والانصراف</h2>
+              <p class="muted">
+                اختر الموظف ثم موقع التسجيل، وبعدها اضغط حضور أو انصراف.
+              </p>
+            </div>
+          </div>
+          <div class="punch-layout">
+            <article class="panel punch-card">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">خطوة ١</p>
+                  <h3>اختر الموظف</h3>
+                </div>
+                <span class="panel-tag">تسجيل يدوي تجريبي</span>
+              </div>
+              <select id="punchEmployee" class="punch-select">
+                <option value="">أضف موظفًا أولًا</option>
+              </select>
+              <div class="punch-step">
+                <span class="step-num">٢</span><strong>حدد موقع البصمة</strong>
+              </div>
+              <div class="location-grid" id="locationGrid"></div>
+              <div class="punch-actions">
+                <button
+                  class="btn btn-primary"
+                  id="checkInBtn"
+                  data-action="punch-in"
+                  disabled
+                >
+                  <span data-icon="checkin"></span> تسجيل حضور</button
+                ><button
+                  class="btn btn-outline"
+                  id="checkOutBtn"
+                  data-action="punch-out"
+                  disabled
+                >
+                  <span data-icon="checkout"></span> تسجيل انصراف
+                </button>
+              </div>
+              <p class="punch-note">
+                يُسجّل الوقت من ساعة الجهاز وقت الضغط. اختر المواقع كما تناسب
+                مكان العمل.
+              </p>
+            </article>
+            <aside class="panel punch-side">
+              <div class="finger-ring" id="punchFingerprint"></div>
+              <p class="eyebrow">حالة الموظف</p>
+              <h3 id="punchStateTitle">جاهز للتسجيل</h3>
+              <p id="punchStateCopy" class="muted">
+                اختر اسم موظف لتظهر حالة حضوره.
+              </p>
+              <span class="device-badge"
+                ><i class="dot"></i> نموذج محاكاة — ليس قارئ بصمة فعليًا</span
+              >
+              <div class="quick-steps">
+                <strong>كيف تستخدمها؟</strong>
+                <p><i>١</i> أضف الموظفين من صفحة الموظفين.</p>
+                <p><i>٢</i> اختر واحدًا من مواقع العمل.</p>
+                <p><i>٣</i> سجّل الحضور ثم الانصراف.</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+        <section id="page-employees" class="page">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">فريق العمل</p>
+              <h2>الموظفون</h2>
+              <p class="muted">أضف بيانات الفريق وتابع حالة كل موظف.</p>
+            </div>
+            <button class="btn btn-primary" data-action="open-employee">
+              <span>＋</span> إضافة موظف
+            </button>
+          </div>
+          <div class="toolbar">
+            <label class="search-box"
+              ><span data-icon="search"></span
+              ><input
+                id="employeeSearch"
+                type="search"
+                placeholder="ابحث بالاسم أو الرقم أو القسم" /></label
+            ><select class="select" id="employeeFilter">
+              <option value="all">كل الحالات</option>
+              <option value="active">نشط</option>
+              <option value="inactive">موقوف</option>
+            </select>
+          </div>
+          <div id="employeeCards" class="employee-cards"></div>
+          <div id="employeeEmpty" class="empty-state" hidden>
+            <span class="empty-icon" data-icon="people"></span>
+            <h3>ما أضفت موظفين إلى الآن</h3>
+            <p>ابدأ بإضافة موظف واحد، وبعدها تقدر تسجل حضوره وانصرافه.</p>
+            <button class="btn btn-primary" data-action="open-employee">
+              إضافة أول موظف
+            </button>
+          </div>
+        </section>
+        <section id="page-reports" class="page">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">الأرقام بالتفصيل</p>
+              <h2>التقارير</h2>
+              <p class="muted">
+                اختر الفترة لعرض الحضور والانصراف والساعات والأيام.
+              </p>
+            </div>
+            <div class="heading-actions">
+              <button class="btn btn-primary" data-action="export-xlsx">
+                <span data-icon="download"></span> تنزيل Excel (.xlsx)
+              </button>
+              <button class="btn btn-outline" data-action="print-report">
+                طباعة / حفظ PDF
+              </button>
+              <button class="btn btn-outline" data-action="export-csv">
+                تصدير CSV
+              </button>
+            </div>
+          </div>
+          <div id="printReportMeta" class="print-only"></div>
+          <div class="report-filters">
+            <div class="filter-group">
+              <label for="periodType">تجميع التقرير</label
+              ><select class="select" id="periodType">
+                <option value="hour">بالساعة</option>
+                <option value="day" selected>باليوم</option>
+                <option value="month">بالشهر</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="reportFrom">من تاريخ</label
+              ><input class="control" type="date" id="reportFrom" />
+            </div>
+            <div class="filter-group">
+              <label for="reportTo">إلى تاريخ</label
+              ><input class="control" type="date" id="reportTo" />
+            </div>
+            <div class="filter-group">
+              <label for="reportEmployeeSearch">ابحث عن موظف</label
+              ><input
+                class="control"
+                id="reportEmployeeSearch"
+                type="search"
+                list="reportEmployeeList"
+                placeholder="اكتب اسم الموظف"
+              />
+              <datalist id="reportEmployeeList"></datalist>
+            </div>
+            <div class="filter-group">
+              <label for="reportLocation">الموقع</label
+              ><select class="select" id="reportLocation">
+                <option value="all">كل المواقع</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" data-action="refresh-reports">
+              تحديث التقرير
+            </button>
+          </div>
+          <p class="filter-hint">
+            تُوزّع ساعات الدوام على الساعات والأيام التي وقعت فيها، حتى لو امتدت
+            الوردية لليوم التالي.
+          </p>
+          <div class="report-stats">
+            <article class="mini-stat">
+              <span>إجمالي ساعات العمل</span
+              ><b id="reportHours">٠ <small>ساعة</small></b>
+            </article>
+            <article class="mini-stat">
+              <span>أيام الحضور والعمل</span
+              ><b id="reportDays">٠ <small>يوم</small></b>
+            </article>
+            <article class="mini-stat">
+              <span>عدد الحركات</span
+              ><b id="reportEvents">٠ <small>حركة</small></b>
+            </article>
+            <article class="mini-stat">
+              <span>مرات التأخير</span>
+              <b id="reportLateCount">٠ <small>مرة</small></b>
+              <small id="reportLateMinutes">٠ دقيقة تأخير إجمالي</small>
+            </article>
+          </div>
+          <article class="panel table-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">تفاصيل كل وردية</p>
+                <h3>تاريخ البصمة ومن الساعة إلى الساعة</h3>
+              </div>
+              <span class="panel-tag" id="detailCount">٠ وردية</span>
+            </div>
+            <div class="table-scroll">
+              <table class="detail-table">
+                <thead>
+                  <tr>
+                    <th>الموظف</th>
+                    <th>التاريخ</th>
+                    <th>من الساعة</th>
+                    <th>إلى الساعة</th>
+                    <th>موقع الحضور</th>
+                    <th>موقع الانصراف</th>
+                    <th>مدة العمل</th>
+                    <th>التأخير</th>
+                  </tr>
+                </thead>
+                <tbody id="detailRows"></tbody>
+              </table>
+            </div>
+          </article>
+          <article class="panel table-panel" style="margin-top: 14px">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">التجميع حسب الفترة</p>
+                <h3 id="reportTitle">ملخص الدوام</h3>
+              </div>
+              <span class="panel-tag" id="reportCount">٠ نتيجة</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>الفترة</th>
+                    <th>الموظف</th>
+                    <th>الحضور</th>
+                    <th>الانصراف</th>
+                    <th>مدة العمل</th>
+                    <th>موقع التسجيل</th>
+                  </tr>
+                </thead>
+                <tbody id="reportRows"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+        <section id="page-settings" class="page">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">تحكم كامل</p>
+              <h2>إعدادات المنظومة</h2>
+              <p class="muted">
+                اضبط الدوام والمواقع والواجهة قبل بدء التسجيل.
+              </p>
+            </div>
+          </div>
+          <div class="settings-grid">
+            <form id="workSettingsForm" class="panel settings-card wide">
+              <div class="settings-head">
+                <div>
+                  <p class="eyebrow">الدوام ومواقع البصمة</p>
+                  <h3>أوقات العمل والتأخير</h3>
+                  <p>
+                    يُقاس التأخير من وقت بداية الدوام بعد فترة السماح المحددة.
+                  </p>
+                </div>
+                <span class="panel-tag">إعداد أساسي</span>
+              </div>
+              <div class="settings-form-grid">
+                <label class="settings-field"
+                  >بداية الدوام<input
+                    id="shiftStart"
+                    name="shiftStart"
+                    type="time"
+                    required
+                /></label>
+                <label class="settings-field"
+                  >نهاية الدوام<input
+                    id="shiftEnd"
+                    name="shiftEnd"
+                    type="time"
+                    required
+                /></label>
+                <label class="settings-field"
+                  >فترة السماح للتأخير (دقيقة)<input
+                    id="graceMinutes"
+                    name="graceMinutes"
+                    type="number"
+                    min="0"
+                    max="240"
+                    required
+                /></label>
+                <div class="settings-field">
+                  <span>أيام العمل</span>
+                  <div class="workday-list">
+                    <label class="workday-chip"
+                      ><input
+                        type="checkbox"
+                        name="workDays"
+                        value="0"
+                      />الأحد</label
+                    ><label class="workday-chip"
+                      ><input
+                        type="checkbox"
+                        name="workDays"
+                        value="1"
+                      />الإثنين</label
+                    ><label class="workday-chip"
+                      ><input
+                        type="checkbox"
+                        name="workDays"
+                        value="2"
+                      />الثلاثاء</label
+                    ><label class="workday-chip"
+                      ><input
+                        type="checkbox"
+                        name="workDays"
+                        value="3"
+                      />الأربعاء</label
+                    ><label class="workday-chip"
+                      ><input
+                        type="checkbox"
+                        name="workDays"
+                        value="4"
+                      />الخميس</label
+                    ><label class="workday-chip"
+                      ><input
+                        type="checkbox"
+                        name="workDays"
+                        value="5"
+                      />الجمعة</label
+                    ><label class="workday-chip"
+                      ><input
+                        type="checkbox"
+                        name="workDays"
+                        value="6"
+                      />السبت</label
+                    >
+                  </div>
+                </div>
+                <div class="settings-field full">
+                  <span>مواقع العمل</span>
+                  <div id="siteSettingsList" class="site-settings-list"></div>
+                  <button
+                    class="btn btn-outline add-site-button"
+                    type="button"
+                    data-action="add-site"
+                  >
+                    ＋ إضافة موقع
+                  </button>
+                  <small class="settings-note"
+                    >يمكنك إضافة حتى ٥٠ موقعًا. الموقع الذي لديه حركات لا يُحذف
+                    حتى لا تتغير أسماء سجلاته القديمة؛ غيّر اسمه بدلًا من
+                    ذلك.</small
+                  >
+                </div>
+              </div>
+              <div class="settings-actions">
+                <button class="btn btn-primary" type="submit">
+                  حفظ إعدادات الدوام والمواقع
+                </button>
+              </div>
+            </form>
+            <form id="appearanceForm" class="panel settings-card">
+              <div class="settings-head">
+                <div>
+                  <p class="eyebrow">المظهر</p>
+                  <h3>الألوان والخط</h3>
+                  <p>تُطبق اختياراتك على هذه النسخة في المتصفح.</p>
+                </div>
+              </div>
+              <div class="settings-form-grid">
+                <label class="settings-field"
+                  >الوضع<select id="themeChoice" name="theme">
+                    <option value="light">نهاري</option>
+                    <option value="dark">ليلي</option>
+                  </select></label
+                >
+                <label class="settings-field"
+                  >الخط<select id="fontChoice" name="font">
+                    <option value="Segoe UI">Segoe UI</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Trebuchet MS">Trebuchet MS</option>
+                    <option value="Traditional Arabic">
+                      Traditional Arabic
+                    </option>
+                    <option value="Noto Naskh Arabic">Noto Naskh Arabic</option>
+                    <option value="system-ui">خط النظام</option>
+                  </select></label
+                >
+                <label class="settings-field full"
+                  >اللون الأساسي<input
+                    id="accentChoice"
+                    name="accent"
+                    type="color"
+                    value="#13877f"
+                /></label>
+              </div>
+              <div class="settings-actions">
+                <button class="btn btn-primary" type="submit">
+                  حفظ المظهر
+                </button>
+              </div>
+            </form>
+            <form id="deviceSettingsForm" class="panel settings-card">
+              <div class="settings-head">
+                <div>
+                  <p class="eyebrow">استيراد الجهاز</p>
+                  <h3>إعداد جهاز البصمة</h3>
+                  <p>استورد الموظفين والحركات من ملف الجهاز وحدد موقعه.</p>
+                </div>
+              </div>
+              <div class="device-warning">
+                <b>مهم:</b> ملف HTML لا يتصل مباشرة بالماكينة. لـZKTeco شغّل
+                السكربت المرفق من كمبيوتر على نفس الشبكة ثم استورد JSON هنا؛
+                Hikvision يحتاج موصلًا منفصلًا مناسبًا للموديل. هذا استيراد ملفي
+                وليس مزامنة مباشرة مستمرة.
+              </div>
+              <div class="settings-form-grid">
+                <label class="settings-field"
+                  >الشركة<select id="deviceVendor" name="vendor">
+                    <option>ZKTeco</option>
+                    <option>Hikvision</option>
+                    <option>شركة أخرى</option>
+                  </select></label
+                >
+                <label class="settings-field"
+                  >الموديل<input
+                    id="deviceModel"
+                    name="model"
+                    placeholder="اكتب رقم الموديل"
+                /></label>
+                <label class="settings-field"
+                  >عنوان الشبكة<input
+                    id="deviceAddress"
+                    name="address"
+                    placeholder="مثال: 192.168.1.20"
+                /></label>
+                <label class="settings-field"
+                  >المنفذ<input
+                    id="devicePort"
+                    name="port"
+                    inputmode="numeric"
+                    placeholder="حسب موديل الجهاز"
+                /></label>
+              </div>
+              <div class="settings-field full">
+                <label for="deviceImportSite"
+                  >الموقع المرتبط بهذه الماكينة</label
+                >
+                <select id="deviceImportSite" class="select"></select>
+              </div>
+              <div class="device-state">
+                <i class="dot"></i
+                ><span id="deviceStatus"
+                  >استيراد ملف فقط — لم يُفحص اتصال الماكينة.</span
+                >
+              </div>
+              <div class="auto-sync-panel full">
+                <div>
+                  <b>المزامنة التلقائية</b>
+                  <p>
+                    تعمل عند فتح المنظومة من الجسر المحلي على الكمبيوتر المتصل
+                    بالماكينة.
+                  </p>
+                </div>
+                <div class="auto-sync-actions">
+                  <select
+                    id="autoSyncInterval"
+                    class="select"
+                    aria-label="فترة المزامنة"
+                  >
+                    <option value="5">كل 5 دقائق</option>
+                    <option value="10" selected>كل 10 دقائق</option>
+                    <option value="15">كل 15 دقيقة</option>
+                    <option value="30">كل 30 دقيقة</option>
+                  </select>
+                  <button
+                    class="btn btn-outline"
+                    type="button"
+                    data-action="sync-device-now"
+                  >
+                    مزامنة الآن
+                  </button>
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-action="toggle-auto-sync"
+                    id="autoSyncToggle"
+                  >
+                    تشغيل تلقائي
+                  </button>
+                </div>
+                <small id="autoSyncStatus"
+                  >شغّل السكربت بوضع الجسر المحلي؛ الاستيراد اليدوي متاح
+                  دائمًا.</small
+                >
+              </div>
+              <div class="settings-actions">
+                <button class="btn btn-outline" type="submit">
+                  حفظ بيانات الجهاز محليًا
+                </button>
+                <label class="btn btn-primary import-label"
+                  >استيراد JSON من الجهاز<input
+                    id="importDeviceFile"
+                    type="file"
+                    accept="application/json,.json"
+                /></label>
+              </div>
+              <p class="settings-note">
+                للاستيراد اليدوي شغّل <code>zkteco_sync.py</code> دون
+                <code>--serve</code> ثم اختر ملف JSON. للتلقائي ضع هذا الملف
+                بجانب السكربت وشغّله مع <code>--serve</code>؛ افتح رابط
+                localhost الذي يظهر في الطرفية ثم فعّل المزامنة. GitHub Pages لا
+                يصل إلى الماكينة مباشرة. لا ترفع الجهاز إلى الإنترنت أو تضع
+                مفتاحه في المستودع. نوع الحركة الافتراضي تناوبي؛ تحقّق من أكواد
+                موديلك قبل الاعتماد، فالسكربت يتيح ربط حقل status أو punch بكود
+                الدخول وكود الانصراف. عنوان IP والمنفذ الفعليان يمرّران للسكربت
+                بخياري <code>--ip</code> و<code>--port</code>.
+              </p>
+            </form>
+            <section class="panel settings-card">
+              <div class="settings-head">
+                <div>
+                  <p class="eyebrow">بياناتك</p>
+                  <h3>نسخ احتياطي واستعادة</h3>
+                  <p>
+                    صدّر سجل الموظفين والبصمات لاستعادته لاحقًا على هذا الملف.
+                  </p>
+                </div>
+              </div>
+              <div class="backup-actions">
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                  data-action="export-backup"
+                >
+                  تنزيل نسخة احتياطية</button
+                ><label class="btn btn-outline import-label"
+                  >استعادة نسخة<input
+                    id="importBackupFile"
+                    type="file"
+                    accept="application/json,.json"
+                /></label>
+              </div>
+              <p class="settings-note">
+                احتفظ بالنسخة الاحتياطية في مكان خاص؛ تشمل حساب المسؤول وسجل
+                الدوام. لا تحفظ فيها كلمات مرور أجهزة البصمة.
+              </p>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+    <div id="employeeOverlay" class="overlay" hidden>
+      <div
+        class="dialog-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="employeeDialogTitle"
+      >
+        <div class="dialog-head">
+          <div>
+            <p class="eyebrow">بيانات الفريق</p>
+            <h3 id="employeeDialogTitle">إضافة موظف جديد</h3>
+          </div>
+          <button
+            class="btn-icon"
+            data-action="close-employee"
+            aria-label="إغلاق"
+          >
+            ×
+          </button>
+        </div>
+        <form id="employeeForm" class="dialog-form">
+          <label
+            >رقم الموظف<input
+              name="code"
+              required
+              minlength="2"
+              maxlength="24"
+              placeholder="مثال: 1001" /></label
+          ><label
+            >الاسم الكامل<input
+              name="name"
+              required
+              minlength="2"
+              maxlength="90"
+              placeholder="اسم الموظف" /></label
+          ><label
+            >القسم<input
+              name="department"
+              maxlength="60"
+              placeholder="مثال: الإدارة" /></label
+          ><label
+            >المسمى الوظيفي<input
+              name="title"
+              maxlength="60"
+              placeholder="المسمى الوظيفي"
+          /></label>
+          <div class="dialog-actions wide">
+            <button
+              class="btn btn-outline"
+              type="button"
+              data-action="close-employee"
+            >
+              إلغاء</button
+            ><button class="btn btn-primary" type="submit">حفظ الموظف</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="toastStack" class="toast-stack" aria-live="polite"></div>
+    <script>
+      (() => {
+        "use strict";
+        const KEY = "dawami_single_html_v1",
+          SESSION = "dawami_single_html_session_v1";
+        const icons = {
+          logo: '<path d="M7 20c0-3 1-4 1-7 0-3 1-5 4-5s4 2 4 5c0 2 1 4 1 7M5 18c0-3 1-4 1-7 0-5 2-8 6-8s6 3 6 8c0 2 1 4 1 7M9 20c0-2 1-3 1-6 0-2 1-3 2-3s2 1 2 3c0 2 1 4 1 6"/>',
+          dashboard:
+            '<rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/>',
+          people:
+            '<path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM20 8v6M23 11h-6"/>',
+          fingerprint:
+            '<path d="M12 11a2 2 0 0 0-2 2c0 3-1 6-2 8M12 7a6 6 0 0 0-6 6c0 3-.4 5-1.5 7M12 3a10 10 0 0 0-10 10M12 3a10 10 0 0 1 10 10c0 2.5.4 4.5 1 6M12 11a2 2 0 0 1 2 2c0 3 .5 5.5 1.5 8M18 20c-.7-2-1-4-1-7M6 13c0 2.3-.3 4.5-1 6"/>',
+          clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+          activity: '<path d="M3 12h4l3-8 4 16 3-8h4"/>',
+          chart: '<path d="M4 19V5M4 19h17M8 16v-4M13 16V7M18 16v-7"/>',
+          pin: '<path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
+          search: '<circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4 4"/>',
+          download: '<path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19v2h16v-2"/>',
+          checkin: '<path d="M12 4v11m0 0 4-4m-4 4-4-4M5 20h14"/>',
+          checkout: '<path d="M12 20V9m0 0 4 4m-4-4-4 4M5 4h14"/>',
+          logout: '<path d="M10 17l5-5-5-5M15 12H3M21 4v16"/>',
+          menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+          person:
+            '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+          user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+          lock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3"/>',
+          eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+          eyeOff:
+            '<path d="m3 3 18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.2A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a15 15 0 0 1-3 3.8M6.2 6.3C3.5 8 2 12 2 12s3.5 7 10 7a10 10 0 0 0 4-.8"/>',
+          check: '<path d="m5 12 4 4L19 6"/>',
+          x: '<path d="m18 6-12 12M6 6l12 12"/>',
+        };
+        const icon = (name, size = 20) =>
+          `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.activity}</svg>`;
+        const $ = (s, r = document) => r.querySelector(s),
+          $$ = (s, r = document) => [...r.querySelectorAll(s)];
+        const ar = new Intl.NumberFormat("ar-LY"),
+          dates = new Intl.DateTimeFormat("ar-LY", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+          });
+        const DEFAULT_SETTINGS = {
+          shiftStart: "08:00",
+          shiftEnd: "16:00",
+          graceMinutes: 10,
+          workDays: [0, 1, 2, 3, 4],
+          sites: ["الموقع الأول", "الموقع الثاني", "الموقع الثالث"],
+          theme: "light",
+          font: "Segoe UI",
+          accent: "#13877f",
+          fontScale: 1,
+          initialSetupDone: false,
+          device: {
+            vendor: "ZKTeco",
+            model: "",
+            address: "",
+            port: "",
+            importSite: 1,
+            autoSync: false,
+            syncInterval: 10,
+            status: "استيراد ملف فقط — لم يُفحص اتصال الماكينة.",
+          },
+        };
+        function freshData() {
+          return {
+            admin: null,
+            employees: [],
+            events: [],
+            settings: {
+              ...DEFAULT_SETTINGS,
+              workDays: [...DEFAULT_SETTINGS.workDays],
+              sites: [...DEFAULT_SETTINGS.sites],
+              device: { ...DEFAULT_SETTINGS.device },
+            },
+          };
+        }
+        let data = loadData(),
+          page = "dashboard",
+          chosenLocation = 1,
+          reportRows = [],
+          reportDetails = [],
+          autoSyncTimer = null;
+        function loadData() {
+          let stored = {};
+          try {
+            stored = JSON.parse(localStorage.getItem(KEY)) || {};
+          } catch {}
+          return {
+            ...freshData(),
+            ...stored,
+            employees: Array.isArray(stored.employees) ? stored.employees : [],
+            events: Array.isArray(stored.events) ? stored.events : [],
+            settings: {
+              ...DEFAULT_SETTINGS,
+              ...(stored.settings || {}),
+              workDays: Array.isArray(stored.settings?.workDays)
+                ? stored.settings.workDays
+                : [...DEFAULT_SETTINGS.workDays],
+              sites:
+                Array.isArray(stored.settings?.sites) &&
+                stored.settings.sites.length
+                  ? stored.settings.sites
+                      .map((v) => String(v || "موقع جديد"))
+                      .slice(0, 50)
+                  : [...DEFAULT_SETTINGS.sites],
+              device: {
+                ...DEFAULT_SETTINGS.device,
+                ...(stored.settings?.device || {}),
+              },
+            },
+          };
+        }
+        function saveData() {
+          localStorage.setItem(KEY, JSON.stringify(data));
+        }
+        function esc(v) {
+          return String(v ?? "").replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[c],
+          );
+        }
+        function initials(n) {
+          return Array.from(String(n || "م").trim())[0] || "م";
+        }
+        function keyDate(d = new Date()) {
+          return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        }
+        function localDay(value) {
+          return keyDate(new Date(value));
+        }
+        function timeText(v) {
+          const d = new Date(v);
+          return Number.isFinite(d.getTime())
+            ? new Intl.DateTimeFormat("ar-LY", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              }).format(d)
+            : "—";
+        }
+        function dateText(
+          v,
+          options = { day: "numeric", month: "short", year: "numeric" },
+        ) {
+          const d = new Date(v);
+          return Number.isFinite(d.getTime())
+            ? new Intl.DateTimeFormat("ar-LY", options).format(d)
+            : "—";
+        }
+        function durationText(ms, compact = false) {
+          const n = Math.max(0, Math.floor(ms / 60000)),
+            h = Math.floor(n / 60),
+            m = n % 60;
+          return compact
+            ? `${ar.format(h)}:${String(m).padStart(2, "0")}`
+            : `${ar.format(h)} ساعة ${ar.format(m)} دقيقة`;
+        }
+        function pageTitle(p) {
+          return (
+            {
+              dashboard: "نظرة عامة",
+              punch: "تسجيل الحضور",
+              employees: "الموظفون",
+              reports: "التقارير",
+              settings: "الإعدادات",
+            }[p] || "دوامي"
+          );
+        }
+        function showAuth(mode) {
+          $("#appView").hidden = true;
+          $("#authView").hidden = false;
+          $("#setupForm").hidden = mode !== "setup";
+          $("#loginForm").hidden = mode !== "login";
+          $("#setupTip").hidden = mode !== "setup";
+          $("#authEyebrow").textContent =
+            mode === "setup" ? "خطوة الإعداد الأولى" : "مساحة العمل";
+          $("#authTitle").textContent =
+            mode === "setup" ? "أنشئ حساب المسؤول" : "مرحبًا بعودتك";
+          $("#authSubtitle").textContent =
+            mode === "setup"
+              ? "اختر اسمًا وكلمة مرور للدخول إلى منظومتك."
+              : "اكتب بيانات الدخول التي أنشأتها على هذا الجهاز.";
+        }
+        function showApp() {
+          if (!localStorage.getItem(SESSION)) {
+            showAuth(data.admin ? "login" : "setup");
+            return;
+          }
+          $("#authView").hidden = true;
+          $("#appView").hidden = false;
+          $("#sideName").textContent = data.admin.name;
+          $("#sideAvatar").textContent = initials(data.admin.name);
+          $("#topAvatar").textContent = initials(data.admin.name);
+          $("#todayDate").textContent = dates.format(new Date());
+          applyPreferences();
+          renderAll();
+          setPage(data.settings.initialSetupDone ? page : "settings");
+          window.setTimeout(resumeAutoSync, 350);
+        }
+        function boot() {
+          for (const id of ["authBrandIcon", "appBrandIcon"])
+            $("#" + id).innerHTML = icon("logo", 23);
+          $("#storyFingerprint").innerHTML = icon("fingerprint", 60);
+          $("#personIcon").innerHTML = icon("person", 18);
+          $("#userIcon").innerHTML = icon("user", 18);
+          $("#lockIcon").innerHTML = icon("lock", 18);
+          $("#loginUserIcon").innerHTML = icon("user", 18);
+          $("#loginLockIcon").innerHTML = icon("lock", 18);
+          $("#eyeSetup").innerHTML = icon("eye", 16);
+          $("#eyeLogin").innerHTML = icon("eye", 16);
+          $("#logoutIcon").innerHTML = icon("logout", 17);
+          $("#menuIcon").innerHTML = icon("menu", 18);
+          $("#infoIcon").innerHTML = icon("activity", 18);
+          $("#punchFingerprint").innerHTML = icon("fingerprint", 53);
+          $$("[data-icon]").forEach(
+            (el) => (el.innerHTML = icon(el.dataset.icon, 17)),
+          );
+          if (
+            data.admin &&
+            localStorage.getItem(SESSION) === data.admin.username
+          )
+            showApp();
+          else showAuth(data.admin ? "login" : "setup");
+        }
+        async function passwordHash(password, saltHex) {
+          if (!crypto?.subtle)
+            throw new Error(
+              "المتصفح لا يدعم حماية كلمة المرور المحلية. افتح الملف بآخر إصدار من Chrome أو Edge.",
+            );
+          const bytes = (s) =>
+            Uint8Array.from(s.match(/.{2}/g) || [], (x) => parseInt(x, 16));
+          const key = await crypto.subtle.importKey(
+            "raw",
+            new TextEncoder().encode(password),
+            "PBKDF2",
+            false,
+            ["deriveBits"],
+          );
+          const bits = await crypto.subtle.deriveBits(
+            {
+              name: "PBKDF2",
+              salt: bytes(saltHex),
+              iterations: 100000,
+              hash: "SHA-256",
+            },
+            key,
+            256,
+          );
+          return [...new Uint8Array(bits)]
+            .map((x) => x.toString(16).padStart(2, "0"))
+            .join("");
+        }
+        function randomSalt() {
+          return [...crypto.getRandomValues(new Uint8Array(16))]
+            .map((x) => x.toString(16).padStart(2, "0"))
+            .join("");
+        }
+        function setError(id, msg = "") {
+          $(id).textContent = msg;
+        }
+        function toast(msg, type = "success") {
+          const node = document.createElement("div");
+          node.className = `toast ${type}`;
+          node.innerHTML = `<i></i><span>${esc(msg)}</span>`;
+          $("#toastStack").append(node);
+          setTimeout(() => node.remove(), 3200);
+        }
+        async function setupAccount(e) {
+          e.preventDefault();
+          setError("#setupError");
+          const name = $("#setupName").value.trim(),
+            username = $("#setupUsername").value.trim().toLowerCase(),
+            password = $("#setupPassword").value;
+          if (!/^[\p{L}\p{N}._-]{3,32}$/u.test(username)) {
+            setError("#setupError", "اسم المستخدم من 3 إلى 32 حرفًا أو رقمًا.");
+            return;
+          }
+          if (password.length < 10) {
+            setError("#setupError", "اختر كلمة مرور لا تقل عن 10 أحرف.");
+            return;
+          }
+          try {
+            const salt = randomSalt(),
+              hash = await passwordHash(password, salt);
+            data.admin = { name, username, salt, hash };
+            saveData();
+            localStorage.setItem(SESSION, username);
+            showApp();
+            toast("تم إنشاء الحساب على هذا الجهاز.");
+          } catch (err) {
+            setError("#setupError", err.message);
+          }
+        }
+        async function login(e) {
+          e.preventDefault();
+          setError("#loginError");
+          const username = $("#loginUsername").value.trim().toLowerCase(),
+            password = $("#loginPassword").value;
+          if (!data.admin || username !== data.admin.username) {
+            setError("#loginError", "اسم المستخدم أو كلمة المرور غير صحيحة.");
+            return;
+          }
+          try {
+            const hash = await passwordHash(password, data.admin.salt);
+            if (hash !== data.admin.hash) {
+              setError("#loginError", "اسم المستخدم أو كلمة المرور غير صحيحة.");
+              return;
+            }
+            localStorage.setItem(SESSION, username);
+            showApp();
+            toast(`أهلًا ${data.admin.name}، المنظومة جاهزة.`);
+          } catch (err) {
+            setError("#loginError", err.message);
+          }
+        }
+        function logout() {
+          if (autoSyncTimer) clearInterval(autoSyncTimer);
+          autoSyncTimer = null;
+          localStorage.removeItem(SESSION);
+          showAuth(data.admin ? "login" : "setup");
+          $("#loginForm").reset();
+          toast("تم تسجيل الخروج.");
+        }
+        function activeEmployees() {
+          return data.employees.filter((e) => e.status !== "inactive");
+        }
+        function lastEvent(id) {
+          return (
+            data.events
+              .filter((x) => Number(x.employeeId) === Number(id))
+              .sort((a, b) => b.timestamp.localeCompare(a.timestamp))[0] || null
+          );
+        }
+        function buildShifts() {
+          const events = [...data.events].sort((a, b) =>
+              a.timestamp.localeCompare(b.timestamp),
+            ),
+            open = new Map(),
+            shifts = [];
+          for (const ev of events) {
+            const id = Number(ev.employeeId);
+            if (ev.kind === "in") {
+              if (!open.has(id)) open.set(id, ev);
+            } else {
+              const start = open.get(id);
+              if (start) {
+                shifts.push({
+                  employeeId: id,
+                  employeeName: start.employeeName,
+                  start: start.timestamp,
+                  end: ev.timestamp,
+                  inLocation: Number(start.location),
+                  outLocation: Number(ev.location),
+                  open: false,
+                });
+                open.delete(id);
+              }
+            }
+          }
+          for (const start of open.values())
+            shifts.push({
+              employeeId: Number(start.employeeId),
+              employeeName: start.employeeName,
+              start: start.timestamp,
+              end: null,
+              inLocation: Number(start.location),
+              outLocation: null,
+              open: true,
+            });
+          return shifts;
+        }
+        function bucketKey(date, type) {
+          const day = keyDate(date);
+          if (type === "hour")
+            return `${day}-${String(date.getHours()).padStart(2, "0")}`;
+          if (type === "month")
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+          return day;
+        }
+        function splitShift(shift, type) {
+          const start = new Date(shift.start).getTime(),
+            end = shift.end ? new Date(shift.end).getTime() : Date.now();
+          if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start)
+            return [];
+          const out = [];
+          let cursor = start;
+          while (cursor < end) {
+            const d = new Date(cursor);
+            let edge;
+            if (type === "hour") {
+              edge = new Date(d);
+              edge.setMinutes(0, 0, 0);
+              edge.setHours(edge.getHours() + 1);
+            } else if (type === "month")
+              edge = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+            else {
+              edge = new Date(d);
+              edge.setHours(24, 0, 0, 0);
+            }
+            const next = Math.min(end, edge.getTime());
+            if (next <= cursor) break;
+            out.push({
+              dateKey: keyDate(d),
+              bucketKey: bucketKey(d, type),
+              duration: next - cursor,
+            });
+            cursor = next;
+          }
+          return out;
+        }
+        function formatPeriod(key, type) {
+          if (type === "hour") {
+            const d = new Date(`${key.slice(0, 10)}T00:00:00`);
+            return `${dateText(d, { day: "numeric", month: "short" })} · ${ar.format(Number(key.slice(11, 13)))}:00`;
+          }
+          if (type === "month") {
+            const [y, m] = key.split("-").map(Number);
+            return new Intl.DateTimeFormat("ar-LY", {
+              month: "long",
+              year: "numeric",
+            }).format(new Date(y, m - 1, 1));
+          }
+          const [y, m, d] = key.split("-").map(Number);
+          return dateText(new Date(y, m - 1, d));
+        }
+        function escapeCell(v) {
+          let s = String(v ?? "");
+          if (/^[=+\-@]/.test(s)) s = "'" + s;
+          return `"${s.replaceAll('"', '""')}"`;
+        }
+        function currentToday() {
+          return keyDate();
+        }
+        function workingNow(id) {
+          return lastEvent(id)?.kind === "in";
+        }
+        function shiftHoursOnDay(shifts, day) {
+          return shifts.reduce(
+            (total, s) =>
+              total +
+              splitShift(s, "day")
+                .filter((x) => x.dateKey === day)
+                .reduce((sum, x) => sum + x.duration, 0),
+            0,
+          );
+        }
+        function setPage(p) {
+          page = p;
+          $$(".page").forEach((el) =>
+            el.classList.toggle("visible", el.id === `page-${p}`),
+          );
+          $$(".nav-btn").forEach((el) =>
+            el.classList.toggle("active", el.dataset.page === p),
+          );
+          $("#crumb").textContent = pageTitle(p);
+          $("#pageTitle").textContent =
+            p === "dashboard" ? `صباح الخير، ${data.admin.name}` : pageTitle(p);
+          closeSidebar();
+          if (p === "reports") renderReports();
+          if (p === "punch") renderPunch();
+          if (p === "settings") renderSettings();
+        }
+        function closeSidebar() {
+          $("#sidebar").classList.remove("open");
+          $("#mobileOverlay").classList.remove("visible");
+        }
+        function openSidebar() {
+          $("#sidebar").classList.add("open");
+          $("#mobileOverlay").classList.add("visible");
+        }
+        function personCell(name, sub = "") {
+          return `<div class="person"><span class="person-badge">${esc(initials(name))}</span><span><strong>${esc(name)}</strong>${sub ? `<small>${esc(sub)}</small>` : ""}</span></div>`;
+        }
+        function renderDashboard() {
+          const today = currentToday(),
+            todayEvents = data.events.filter(
+              (e) => localDay(e.timestamp) === today,
+            ),
+            present = activeEmployees().filter((e) => workingNow(e.id));
+          $("#statPresent").textContent = ar.format(present.length);
+          $("#statPresentFoot").textContent =
+            `من أصل ${ar.format(activeEmployees().length)} موظف نشط`;
+          $("#statHours").textContent = durationText(
+            shiftHoursOnDay(buildShifts(), today),
+            true,
+          );
+          $("#statEmployees").textContent = ar.format(data.employees.length);
+          $("#statActiveFoot").textContent =
+            `${ar.format(activeEmployees().length)} موظف نشط`;
+          $("#statEvents").textContent = ar.format(todayEvents.length);
+          $("#dashboardEmpty").hidden = data.employees.length > 0;
+          $("#recentRows").innerHTML = todayEvents.length
+            ? [...todayEvents]
+                .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
+                .slice(0, 8)
+                .map(
+                  (e) =>
+                    `<tr><td>${personCell(e.employeeName, e.employeeCode)}</td><td>${e.kind === "in" ? "حضور" : "انصراف"}</td><td>${timeText(e.timestamp)}</td><td>${esc(siteName(e.location))}</td><td><span class="pill ${e.kind === "in" ? "pill-in" : "pill-out"}"><i></i>${e.kind === "in" ? "مسجل" : "مكتمل"}</span></td></tr>`,
+                )
+                .join("")
+            : '<tr><td colspan="5" class="empty-cell">ما في حركات مسجلة اليوم؛ أضف موظفًا وابدأ التسجيل.</td></tr>';
+          const values = [];
+          for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const k = keyDate(d);
+            values.push({
+              key: k,
+              label: new Intl.DateTimeFormat("ar-LY", {
+                weekday: "short",
+              }).format(d),
+              count: data.events.filter((e) => localDay(e.timestamp) === k)
+                .length,
+            });
+          }
+          const max = Math.max(1, ...values.map((v) => v.count));
+          $("#weekChart").innerHTML = values
+            .map(
+              (v) =>
+                `<div class="chart-col" title="${ar.format(v.count)} حركة"><span class="chart-bar" style="height:${v.count ? Math.max(8, (v.count / max) * 100) : 4}%"></span><small>${esc(v.label)}</small></div>`,
+            )
+            .join("");
+          const counts = data.settings.sites.map(
+              (_, i) =>
+                todayEvents.filter((e) => Number(e.location) === i + 1).length,
+            ),
+            top = Math.max(1, ...counts);
+          $("#siteBars").innerHTML = counts
+            .map(
+              (n, i) =>
+                `<div class="site-row"><div class="site-label"><span>${siteName(i + 1)}</span><b>${ar.format(n)} حركة</b></div><div class="site-track"><i style="width:${n ? Math.max(5, (n / top) * 100) : 0}%"></i></div></div>`,
+            )
+            .join("");
+          $("#navEmployeeCount").textContent = ar.format(data.employees.length);
+        }
+        function siteName(n) {
+          return data.settings.sites[Number(n) - 1] || "—";
+        }
+        function renderLocationControls() {
+          if (chosenLocation > data.settings.sites.length) chosenLocation = 1;
+          $("#locationGrid").innerHTML = data.settings.sites
+            .map(
+              (name, i) =>
+                `<button type="button" class="location-option ${chosenLocation === i + 1 ? "selected" : ""}" data-location="${i + 1}"><span class="location-symbol">${icon("pin", 17)}</span><b>${esc(name)}</b><small>نقطة التسجيل ${ar.format(i + 1)}</small></button>`,
+            )
+            .join("");
+        }
+        function renderLocationFilter() {
+          const sel = $("#reportLocation");
+          if (!sel) return;
+          const old = sel.value;
+          sel.innerHTML =
+            '<option value="all">كل المواقع</option>' +
+            data.settings.sites
+              .map(
+                (name, i) => `<option value="${i + 1}">${esc(name)}</option>`,
+              )
+              .join("");
+          sel.value =
+            old === "all" || Number(old) <= data.settings.sites.length
+              ? old
+              : "all";
+          const importSite = $("#deviceImportSite");
+          if (importSite) {
+            const previous = importSite.value;
+            importSite.innerHTML = data.settings.sites
+              .map(
+                (name, i) => `<option value="${i + 1}">${esc(name)}</option>`,
+              )
+              .join("");
+            importSite.value = data.settings.sites.some(
+              (_, i) => String(i + 1) === previous,
+            )
+              ? previous
+              : String(data.settings.device?.importSite || 1);
+          }
+        }
+        function renderSiteSettingsList(names = data.settings.sites) {
+          const host = $("#siteSettingsList");
+          if (!host) return;
+          host.innerHTML = names
+            .map((name, i) => {
+              const inUse = data.events.some(
+                (event) => Number(event.location) === i + 1,
+              );
+              const canRemove =
+                i === names.length - 1 && names.length > 1 && !inUse;
+              return `<div class="site-setting-row"><label class="settings-field">اسم الموقع ${ar.format(i + 1)}<input data-site-input="${i}" maxlength="50" required value="${esc(name)}" placeholder="مثال: الفرع الرئيسي"></label>${canRemove ? `<button type="button" class="btn btn-outline site-remove" data-action="remove-site" data-index="${i}" title="حذف آخر موقع">حذف</button>` : inUse && i === names.length - 1 ? `<small class="site-in-use">لديه سجلات؛ غيّر الاسم بدل حذفه</small>` : ""}</div>`;
+            })
+            .join("");
+        }
+        function addSite() {
+          const names = $$("[data-site-input]").map((input) =>
+            input.value.trim(),
+          );
+          if (names.length >= 50)
+            return toast("وصلت إلى الحد الأقصى: ٥٠ موقعًا.", "error");
+          names.push(`موقع ${ar.format(names.length + 1)}`);
+          renderSiteSettingsList(names);
+        }
+        function removeLastSite(index) {
+          const inputs = $$("[data-site-input]"),
+            names = inputs.map((input) => input.value.trim());
+          if (index !== names.length - 1 || names.length <= 1) return;
+          if (data.events.some((event) => Number(event.location) === index + 1))
+            return toast(
+              "لا يمكن حذف موقع لديه حركات محفوظة؛ غيّر اسمه للمحافظة على سجلاته.",
+              "error",
+            );
+          names.pop();
+          renderSiteSettingsList(names);
+        }
+        function lateMinutes(startValue) {
+          const d = new Date(startValue);
+          if (
+            !Number.isFinite(d.getTime()) ||
+            !data.settings.workDays.includes(d.getDay())
+          )
+            return 0;
+          const [h, m] = data.settings.shiftStart.split(":").map(Number);
+          const scheduled = new Date(d);
+          scheduled.setHours(h, m, 0, 0);
+          return Math.max(
+            0,
+            Math.floor(
+              (d.getTime() -
+                scheduled.getTime() -
+                Number(data.settings.graceMinutes || 0) * 60000) /
+                60000,
+            ),
+          );
+        }
+        function renderEmployees() {
+          const q = $("#employeeSearch").value.trim().toLowerCase(),
+            filter = $("#employeeFilter").value;
+          const list = data.employees.filter(
+            (e) =>
+              (filter === "all" || e.status === filter) &&
+              (!q ||
+                `${e.name} ${e.code} ${e.department} ${e.title}`
+                  .toLowerCase()
+                  .includes(q)),
+          );
+          $("#employeeEmpty").hidden = data.employees.length > 0;
+          $("#employeeCards").innerHTML = list
+            .map((e) => {
+              const shifts = buildShifts().filter(
+                  (s) => Number(s.employeeId) === Number(e.id),
+                ),
+                hours = shifts.reduce(
+                  (sum, s) =>
+                    sum + (s.end ? new Date(s.end) - new Date(s.start) : 0),
+                  0,
+                ),
+                days = new Set(shifts.map((s) => localDay(s.start))).size;
+              return `<article class="employee-card"><div class="employee-card-head"><span class="person-badge">${esc(initials(e.name))}</span><div><h3>${esc(e.name)}</h3><p>${esc(e.title || "موظف")} · ${esc(e.code)}</p></div></div><div class="employee-meta"><span>${esc(e.department || "بدون قسم")}</span><span>${ar.format(days)} يوم</span><span>${durationText(hours, true)} ساعة</span></div><div class="employee-card-foot"><small><span class="pill ${e.status === "inactive" ? "pill-out" : "pill-in"}"><i></i>${e.status === "inactive" ? "موقوف" : "نشط"}</span></small><button class="link-button" data-action="toggle-employee" data-id="${e.id}" data-status="${e.status === "inactive" ? "active" : "inactive"}">${e.status === "inactive" ? "تفعيل الموظف" : "إيقاف الموظف"}</button></div></article>`;
+            })
+            .join("");
+        }
+        function renderPunch() {
+          const select = $("#punchEmployee"),
+            old = select.value;
+          select.innerHTML =
+            '<option value="">اختر الموظف</option>' +
+            activeEmployees()
+              .map(
+                (e) =>
+                  `<option value="${e.id}">${esc(e.name)} · ${esc(e.code)}</option>`,
+              )
+              .join("");
+          if ([...select.options].some((o) => o.value === old))
+            select.value = old;
+          $$("[data-location]").forEach((el) =>
+            el.classList.toggle(
+              "selected",
+              Number(el.dataset.location) === chosenLocation,
+            ),
+          );
+          const id = Number(select.value),
+            employee = data.employees.find((e) => Number(e.id) === id),
+            last = employee ? lastEvent(id) : null,
+            working = last?.kind === "in";
+          $("#checkInBtn").disabled =
+            !employee || employee.status === "inactive" || working;
+          $("#checkOutBtn").disabled =
+            !employee || employee.status === "inactive" || !working;
+          $("#punchStateTitle").textContent = !employee
+            ? "جاهز للتسجيل"
+            : working
+              ? "الموظف حاضر الآن"
+              : "بانتظار تسجيل الحضور";
+          $("#punchStateCopy").textContent = !employee
+            ? "اختر اسم موظف لتظهر حالة حضوره."
+            : working
+              ? `${employee.name} سجل حضوره ${timeText(last.timestamp)} في ${siteName(last.location)}.`
+              : `${employee.name} غير مسجل كحاضر الآن.`;
+        }
+        function addPunch(kind) {
+          const id = Number($("#punchEmployee").value),
+            employee = data.employees.find((e) => Number(e.id) === id);
+          if (!employee) return toast("اختر الموظف أولًا.", "error");
+          if (employee.status === "inactive")
+            return toast("هذا الموظف موقوف.", "error");
+          const working = workingNow(id);
+          if (kind === "in" && working)
+            return toast("يوجد حضور مفتوح؛ سجل الانصراف أولًا.", "error");
+          if (kind === "out" && !working)
+            return toast("لا يوجد حضور مفتوح لتسجيل الانصراف.", "error");
+          data.events.push({
+            id: crypto.randomUUID
+              ? crypto.randomUUID()
+              : `${Date.now()}-${Math.random()}`,
+            employeeId: id,
+            employeeName: employee.name,
+            employeeCode: employee.code,
+            kind,
+            location: chosenLocation,
+            timestamp: new Date().toISOString(),
+          });
+          saveData();
+          renderAll();
+          renderPunch();
+          toast(
+            `تم تسجيل ${kind === "in" ? "الحضور" : "الانصراف"} في ${siteName(chosenLocation)}.`,
+          );
+        }
+        function addEmployee(e) {
+          e.preventDefault();
+          const form = e.currentTarget,
+            fd = new FormData(form),
+            code = String(fd.get("code")).trim().toUpperCase(),
+            name = String(fd.get("name")).trim();
+          if (
+            data.employees.some(
+              (x) => x.code.toLowerCase() === code.toLowerCase(),
+            )
+          )
+            return toast("رقم الموظف موجود بالفعل.", "error");
+          data.employees.push({
+            id: Date.now(),
+            code,
+            name,
+            department: String(fd.get("department")).trim(),
+            title: String(fd.get("title")).trim(),
+            status: "active",
+            createdAt: new Date().toISOString(),
+          });
+          saveData();
+          form.reset();
+          $("#employeeOverlay").hidden = true;
+          renderAll();
+          toast("تمت إضافة الموظف.");
+        }
+        function toggleEmployee(id, status) {
+          const e = data.employees.find((x) => Number(x.id) === Number(id));
+          if (!e) return;
+          e.status = status;
+          saveData();
+          renderAll();
+          toast(status === "active" ? "تم تفعيل الموظف." : "تم إيقاف الموظف.");
+        }
+        function renderReports() {
+          const today = currentToday();
+          if (!$("#reportFrom").value) $("#reportFrom").value = today;
+          if (!$("#reportTo").value) $("#reportTo").value = today;
+          const type = $("#periodType").value,
+            from = $("#reportFrom").value || today,
+            to = $("#reportTo").value || today,
+            employeeQuery = $("#reportEmployeeSearch")
+              .value.trim()
+              .toLocaleLowerCase("ar");
+          $("#reportEmployeeList").innerHTML = data.employees
+            .map((e) => `<option value="${esc(e.name)}"></option>`)
+            .join("");
+          const matchesEmployee = (record) =>
+            !employeeQuery ||
+            String(record.employeeName || "")
+              .toLocaleLowerCase("ar")
+              .includes(employeeQuery);
+          const loc = $("#reportLocation").value;
+          const events = data.events.filter(
+            (e) =>
+              localDay(e.timestamp) >= from &&
+              localDay(e.timestamp) <= to &&
+              matchesEmployee(e) &&
+              (loc === "all" || Number(e.location) === Number(loc)),
+          );
+          const shifts = buildShifts().filter(
+            (s) =>
+              matchesEmployee(s) &&
+              (loc === "all" ||
+                Number(s.inLocation) === Number(loc) ||
+                Number(s.outLocation) === Number(loc)),
+          );
+          const segments = shifts.flatMap((s) =>
+            splitShift(s, type)
+              .filter((x) => x.dateKey >= from && x.dateKey <= to)
+              .map((x) => ({ ...x, shift: s })),
+          );
+          const days = new Set(
+            segments.map((x) => `${x.shift.employeeId}-${x.dateKey}`),
+          );
+          events
+            .filter((e) => e.kind === "in")
+            .forEach((e) =>
+              days.add(`${e.employeeId}-${localDay(e.timestamp)}`),
+            );
+          $("#reportHours").innerHTML = `${durationText(
+            segments.reduce((n, x) => n + x.duration, 0),
+            true,
+          )} <small>ساعة</small>`;
+          $("#reportDays").innerHTML =
+            `${ar.format(days.size)} <small>يوم</small>`;
+          $("#reportEvents").innerHTML =
+            `${ar.format(events.length)} <small>حركة</small>`;
+          const detailShifts = shifts.filter((s) =>
+            splitShift(s, "day").some(
+              (x) => x.dateKey >= from && x.dateKey <= to,
+            ),
+          );
+          reportDetails = detailShifts
+            .map((s) => {
+              const start = new Date(s.start),
+                endMs = s.end ? new Date(s.end).getTime() : Date.now();
+              return {
+                shift: s,
+                date: localDay(s.start),
+                start: s.start,
+                end: s.end,
+                duration: Math.max(0, endMs - start.getTime()),
+                late: lateMinutes(s.start),
+              };
+            })
+            .sort((a, b) => b.start.localeCompare(a.start));
+          const lateShifts = reportDetails.filter((x) => x.late > 0);
+          $("#reportLateCount").innerHTML =
+            `${ar.format(lateShifts.length)} <small>مرة</small>`;
+          $("#reportLateMinutes").textContent =
+            `${ar.format(lateShifts.reduce((n, x) => n + x.late, 0))} دقيقة تأخير إجمالي`;
+          $("#detailCount").textContent =
+            `${ar.format(reportDetails.length)} وردية`;
+          $("#detailRows").innerHTML = reportDetails.length
+            ? reportDetails
+                .map(
+                  (x) =>
+                    `<tr><td>${personCell(x.shift.employeeName)}</td><td>${dateText(new Date(x.date + "T12:00:00"))}</td><td>${timeText(x.start)}</td><td>${x.end ? timeText(x.end) : '<span class="pill pill-open"><i></i>مستمر</span>'}</td><td>${esc(siteName(x.shift.inLocation))}</td><td>${x.shift.outLocation ? esc(siteName(x.shift.outLocation)) : "—"}</td><td><b>${durationText(x.duration, true)}</b></td><td class="${x.late ? "late-cell" : ""}">${x.late ? `${ar.format(x.late)} دقيقة` : "—"}</td></tr>`,
+                )
+                .join("")
+            : '<tr><td colspan="8">لا توجد ورديات في الفترة المحددة.</td></tr>';
+          $("#reportTitle").textContent =
+            type === "hour"
+              ? "ملخص بالساعة"
+              : type === "month"
+                ? "ملخص شهري"
+                : "ملخص يومي";
+          const map = new Map(),
+            ensure = (key, id, name) => {
+              const k = `${key}-${id}`;
+              if (!map.has(k))
+                map.set(k, {
+                  bucketKey: key,
+                  employeeId: id,
+                  employeeName: name,
+                  starts: [],
+                  ends: [],
+                  duration: 0,
+                  sites: new Set(),
+                  open: false,
+                });
+              return map.get(k);
+            };
+          for (const ev of events) {
+            const row = ensure(
+              bucketKey(new Date(ev.timestamp), type),
+              ev.employeeId,
+              ev.employeeName,
+            );
+            if (ev.kind === "in") row.starts.push(ev.timestamp);
+            else row.ends.push(ev.timestamp);
+            row.sites.add(Number(ev.location));
+          }
+          for (const seg of segments) {
+            const s = seg.shift,
+              row = ensure(seg.bucketKey, s.employeeId, s.employeeName);
+            row.duration += seg.duration;
+            row.open ||= s.open;
+            if (loc === "all" || Number(s.inLocation) === Number(loc))
+              row.sites.add(Number(s.inLocation));
+            if (
+              s.outLocation &&
+              (loc === "all" || Number(s.outLocation) === Number(loc))
+            )
+              row.sites.add(Number(s.outLocation));
+          }
+          reportRows = [...map.values()].sort(
+            (a, b) =>
+              b.bucketKey.localeCompare(a.bucketKey) ||
+              a.employeeName.localeCompare(b.employeeName, "ar"),
+          );
+          $("#reportCount").textContent =
+            `${ar.format(reportRows.length)} نتيجة`;
+          $("#reportRows").innerHTML = reportRows.length
+            ? reportRows
+                .map(
+                  (r) =>
+                    `<tr><td>${esc(formatPeriod(r.bucketKey, type))}</td><td>${personCell(r.employeeName)}</td><td>${r.starts.length ? r.starts.sort().map(timeText).join("، ") : "—"}</td><td>${r.ends.length ? r.ends.sort().map(timeText).join("، ") : r.open ? '<span class="pill pill-open"><i></i>مستمر</span>' : "—"}</td><td><b>${durationText(r.duration, true)}</b></td><td>${[...r.sites].sort().map(siteName).join("، ") || "—"}</td></tr>`,
+                )
+                .join("")
+            : '<tr><td colspan="6" class="empty-cell">لا توجد سجلات في الفترة المحددة.</td></tr>';
+        }
+        function exportCsv() {
+          if (!reportDetails.length)
+            return toast("لا توجد نتائج لتصديرها.", "error");
+          const rows = [
+            [
+              "الموظف",
+              "التاريخ",
+              "من الساعة",
+              "إلى الساعة",
+              "موقع الحضور",
+              "موقع الانصراف",
+              "مدة العمل",
+              "التأخير بالدقائق",
+            ],
+            ...reportDetails.map((x) => [
+              x.shift.employeeName,
+              dateText(new Date(x.date + "T12:00:00")),
+              timeText(x.start),
+              x.end ? timeText(x.end) : "مستمر",
+              siteName(x.shift.inLocation),
+              x.shift.outLocation ? siteName(x.shift.outLocation) : "—",
+              durationText(x.duration, true),
+              x.late,
+            ]),
+          ];
+          const csv =
+              "\ufeff" +
+              rows.map((row) => row.map(escapeCell).join(",")).join("\r\n"),
+            url = URL.createObjectURL(
+              new Blob([csv], { type: "text/csv;charset=utf-8" }),
+            ),
+            a = document.createElement("a");
+          a.href = url;
+          a.download = `dawami-report-${currentToday()}.csv`;
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          toast("تم تنزيل التقرير بصيغة CSV.");
+        }
+        function xmlEscape(value) {
+          return String(value ?? "")
+            .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&apos;");
+        }
+        function excelColumn(index) {
+          let label = "";
+          while (index > 0) {
+            const remainder = (index - 1) % 26;
+            label = String.fromCharCode(65 + remainder) + label;
+            index = Math.floor((index - 1) / 26);
+          }
+          return label;
+        }
+        function worksheetXml(rows) {
+          const rowXml = rows
+            .map((row, rowIndex) => {
+              const cells = row
+                .map((value, columnIndex) => {
+                  const ref = `${excelColumn(columnIndex + 1)}${rowIndex + 1}`;
+                  if (typeof value === "number" && Number.isFinite(value))
+                    return `<c r="${ref}"><v>${value}</v></c>`;
+                  return `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xmlEscape(value)}</t></is></c>`;
+                })
+                .join("");
+              return `<row r="${rowIndex + 1}">${cells}</row>`;
+            })
+            .join("");
+          const maxColumn = Math.max(1, ...rows.map((row) => row.length));
+          return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><dimension ref="A1:${excelColumn(maxColumn)}${Math.max(1, rows.length)}"/><sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="18"/><sheetData>${rowXml}</sheetData></worksheet>`;
+        }
+        function zipOpenXml(files) {
+          const encoder = new TextEncoder(),
+            crcTable = new Uint32Array(256);
+          for (let n = 0; n < 256; n++) {
+            let c = n;
+            for (let k = 0; k < 8; k++)
+              c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+            crcTable[n] = c >>> 0;
+          }
+          const crc32 = (bytes) => {
+            let crc = 0xffffffff;
+            for (const byte of bytes)
+              crc = crcTable[(crc ^ byte) & 0xff] ^ (crc >>> 8);
+            return (crc ^ 0xffffffff) >>> 0;
+          };
+          const localParts = [],
+            centralParts = [];
+          let offset = 0;
+          for (const [name, text] of files) {
+            const nameBytes = encoder.encode(name),
+              content = encoder.encode(text),
+              crc = crc32(content),
+              local = new Uint8Array(30 + nameBytes.length),
+              lv = new DataView(local.buffer);
+            lv.setUint32(0, 0x04034b50, true);
+            lv.setUint16(4, 20, true);
+            lv.setUint16(6, 0, true);
+            lv.setUint16(8, 0, true);
+            lv.setUint16(10, 0, true);
+            lv.setUint16(12, 33, true);
+            lv.setUint32(14, crc, true);
+            lv.setUint32(18, content.length, true);
+            lv.setUint32(22, content.length, true);
+            lv.setUint16(26, nameBytes.length, true);
+            lv.setUint16(28, 0, true);
+            local.set(nameBytes, 30);
+            localParts.push(local, content);
+            const central = new Uint8Array(46 + nameBytes.length),
+              cv = new DataView(central.buffer);
+            cv.setUint32(0, 0x02014b50, true);
+            cv.setUint16(4, 20, true);
+            cv.setUint16(6, 20, true);
+            cv.setUint16(8, 0, true);
+            cv.setUint16(10, 0, true);
+            cv.setUint16(12, 0, true);
+            cv.setUint16(14, 33, true);
+            cv.setUint32(16, crc, true);
+            cv.setUint32(20, content.length, true);
+            cv.setUint32(24, content.length, true);
+            cv.setUint16(28, nameBytes.length, true);
+            cv.setUint16(30, 0, true);
+            cv.setUint16(32, 0, true);
+            cv.setUint16(34, 0, true);
+            cv.setUint16(36, 0, true);
+            cv.setUint32(38, 0, true);
+            cv.setUint32(42, offset, true);
+            central.set(nameBytes, 46);
+            centralParts.push(central);
+            offset += local.length + content.length;
+          }
+          const centralSize = centralParts.reduce(
+              (sum, part) => sum + part.length,
+              0,
+            ),
+            end = new Uint8Array(22),
+            ev = new DataView(end.buffer);
+          ev.setUint32(0, 0x06054b50, true);
+          ev.setUint16(4, 0, true);
+          ev.setUint16(6, 0, true);
+          ev.setUint16(8, files.length, true);
+          ev.setUint16(10, files.length, true);
+          ev.setUint32(12, centralSize, true);
+          ev.setUint32(16, offset, true);
+          ev.setUint16(20, 0, true);
+          return new Blob([...localParts, ...centralParts, end], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+        }
+        function exportXlsx() {
+          if (!reportDetails.length && !reportRows.length)
+            return toast("لا توجد نتائج لتصديرها.", "error");
+          const type = $("#periodType").selectedOptions[0].textContent,
+            from = $("#reportFrom").value,
+            to = $("#reportTo").value,
+            employee = $("#reportEmployeeSearch").value.trim() || "كل الموظفين",
+            location =
+              $("#reportLocation").value === "all"
+                ? "كل المواقع"
+                : siteName(Number($("#reportLocation").value)),
+            detailRows = [
+              ["دوامي — تقرير الحضور والانصراف"],
+              ["تاريخ استخراج التقرير", new Date().toLocaleString("ar-LY")],
+              ["طريقة التجميع", type],
+              ["الفترة", `${from} — ${to}`],
+              ["الموظف", employee],
+              ["الموقع", location],
+              ["إجمالي ساعات العمل", $("#reportHours").textContent.trim()],
+              ["أيام الحضور والعمل", $("#reportDays").textContent.trim()],
+              ["عدد الحركات", $("#reportEvents").textContent.trim()],
+              ["مرات التأخير", $("#reportLateCount").textContent.trim()],
+              [
+                "إجمالي دقائق التأخير",
+                $("#reportLateMinutes").textContent.trim(),
+              ],
+              [],
+              [
+                "اسم الموظف",
+                "الرقم الوظيفي",
+                "التاريخ",
+                "وقت الحضور",
+                "وقت الانصراف",
+                "موقع الحضور",
+                "موقع الانصراف",
+                "مدة العمل",
+                "التأخير بالدقائق",
+              ],
+              ...reportDetails.map((x) => [
+                x.shift.employeeName,
+                x.shift.employeeCode || "",
+                dateText(new Date(x.date + "T12:00:00")),
+                timeText(x.start),
+                x.end ? timeText(x.end) : "مستمر",
+                siteName(x.shift.inLocation),
+                x.shift.outLocation ? siteName(x.shift.outLocation) : "—",
+                durationText(x.duration, true),
+                x.late,
+              ]),
+            ],
+            summaryRows = [
+              ["ملخص التقرير حسب الفترة"],
+              ["طريقة التجميع", type],
+              ["من تاريخ", from, "إلى تاريخ", to],
+              ["الموظف", employee, "الموقع", location],
+              [],
+              [
+                "الفترة",
+                "اسم الموظف",
+                "أوقات الحضور",
+                "أوقات الانصراف",
+                "مدة العمل",
+                "المواقع",
+              ],
+              ...reportRows.map((r) => [
+                formatPeriod(r.bucketKey, $("#periodType").value),
+                r.employeeName,
+                r.starts.length
+                  ? r.starts.sort().map(timeText).join("، ")
+                  : "—",
+                r.ends.length ? r.ends.sort().map(timeText).join("، ") : "—",
+                durationText(r.duration, true),
+                [...r.sites].sort().map(siteName).join("، ") || "—",
+              ]),
+            ],
+            workbook =
+              '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="تفاصيل الورديات" sheetId="1" r:id="rId1"/><sheet name="ملخص الفترة" sheetId="2" r:id="rId2"/></sheets></workbook>',
+            files = [
+              [
+                "[Content_Types].xml",
+                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>',
+              ],
+              [
+                "_rels/.rels",
+                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>',
+              ],
+              ["xl/workbook.xml", workbook],
+              [
+                "xl/_rels/workbook.xml.rels",
+                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/></Relationships>',
+              ],
+              ["xl/worksheets/sheet1.xml", worksheetXml(detailRows)],
+              ["xl/worksheets/sheet2.xml", worksheetXml(summaryRows)],
+            ],
+            blob = zipOpenXml(files),
+            url = URL.createObjectURL(blob),
+            a = document.createElement("a");
+          a.href = url;
+          a.download = `dawami-report-${currentToday()}.xlsx`;
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(url), 1500);
+          toast("تم تنزيل ملف Excel وفيه ورقتا التفاصيل والملخص.");
+        }
+        function printReport() {
+          if (!reportDetails.length && !reportRows.length)
+            return toast("لا توجد نتائج لطباعتها.", "error");
+          const type = $("#periodType").selectedOptions[0].textContent,
+            employee = $("#reportEmployeeSearch").value.trim() || "كل الموظفين",
+            location =
+              $("#reportLocation").value === "all"
+                ? "كل المواقع"
+                : siteName(Number($("#reportLocation").value));
+          $("#printReportMeta").textContent =
+            `نوع التقرير: ${type}\nالفترة: ${$("#reportFrom").value} — ${$("#reportTo").value}\nالموظف: ${employee} · الموقع: ${location}\nإجمالي الساعات: ${$("#reportHours").textContent.trim()} · أيام العمل: ${$("#reportDays").textContent.trim()} · الحركات: ${$("#reportEvents").textContent.trim()} · مرات التأخير: ${$("#reportLateCount").textContent.trim()}\nتاريخ الطباعة: ${new Date().toLocaleString("ar-LY")}`;
+          window.print();
+        }
+
+        function openEmployee() {
+          if (!activeEmployees().length && data.employees.length === 0) {
+          }
+          $("#employeeOverlay").hidden = false;
+          setTimeout(() => $("#employeeForm input[name=code]").focus(), 40);
+        }
+        function resetLocal() {
+          if (
+            !confirm(
+              "سيتم حذف حساب المسؤول والموظفين وسجلات الدوام من هذا المتصفح. هل تريد المتابعة؟",
+            )
+          )
+            return;
+          if (autoSyncTimer) clearInterval(autoSyncTimer);
+          autoSyncTimer = null;
+          localStorage.removeItem(KEY);
+          localStorage.removeItem(SESSION);
+          data = freshData();
+          showAuth("setup");
+          toast("تم مسح البيانات المحلية.");
+        }
+
+        function applyPreferences() {
+          const st = data.settings;
+          document.body.classList.toggle("dark-mode", st.theme === "dark");
+          document.documentElement.style.fontFamily = `"${st.font}", Tahoma, Arial, sans-serif`;
+          const scale = Math.min(
+            1.5,
+            Math.max(0.85, Number(st.fontScale) || 1),
+          );
+          document.documentElement.style.setProperty("--font-scale", scale);
+          $("#fontScaleLabel").textContent = `${Math.round(scale * 100)}%`;
+          document.documentElement.style.setProperty(
+            "--teal",
+            st.accent || "#13877f",
+          );
+          document.documentElement.style.setProperty(
+            "--teal-dark",
+            `color-mix(in srgb, ${st.accent || "#13877f"} 82%, #000)`,
+          );
+          renderLocationControls();
+          renderLocationFilter();
+        }
+        function renderSettings() {
+          const st = data.settings;
+          renderSiteSettingsList();
+          for (const id of [
+            "shiftStart",
+            "shiftEnd",
+            "graceMinutes",
+            "themeChoice",
+            "fontChoice",
+            "accentChoice",
+          ]) {
+            const el = $("#" + id);
+            if (el)
+              el.value = {
+                shiftStart: st.shiftStart,
+                shiftEnd: st.shiftEnd,
+                graceMinutes: st.graceMinutes,
+                themeChoice: st.theme,
+                fontChoice: st.font,
+                accentChoice: st.accent,
+              }[id];
+          }
+          $$("input[name=workDays]").forEach(
+            (el) => (el.checked = st.workDays.includes(Number(el.value))),
+          );
+          renderLocationFilter();
+          const d = st.device || DEFAULT_SETTINGS.device;
+          $("#deviceVendor").value = d.vendor || "ZKTeco";
+          $("#deviceModel").value = d.model || "";
+          $("#deviceAddress").value = d.address || "";
+          $("#devicePort").value = d.port || "";
+          $("#deviceImportSite").value = String(d.importSite || 1);
+          $("#deviceStatus").textContent =
+            !d.status || d.status === "غير متصل"
+              ? "استيراد ملف فقط — لم يُفحص اتصال الماكينة."
+              : d.status;
+          $("#autoSyncInterval").value = String(d.syncInterval || 10);
+          $("#autoSyncToggle").textContent = d.autoSync
+            ? "إيقاف التلقائي"
+            : "تشغيل تلقائي";
+          $("#autoSyncStatus").textContent = d.autoSync
+            ? `التلقائي مفعّل كل ${ar.format(d.syncInterval || 10)} دقائق عند تشغيل الجسر المحلي.`
+            : "شغّل السكربت بوضع الجسر المحلي؛ الاستيراد اليدوي متاح دائمًا.";
+        }
+        function saveWorkSettings(e) {
+          e.preventDefault();
+          const fd = new FormData(e.currentTarget),
+            days = [
+              ...e.currentTarget.querySelectorAll(
+                'input[name="workDays"]:checked',
+              ),
+            ].map((x) => Number(x.value));
+          if (fd.get("shiftStart") === fd.get("shiftEnd"))
+            return toast(
+              "وقت بداية الدوام ونهايته لا يمكن أن يكونا متطابقين.",
+              "error",
+            );
+          if (!days.length)
+            return toast("اختر يوم عمل واحدًا على الأقل.", "error");
+          const sites = $$("[data-site-input]", e.currentTarget).map((input) =>
+            input.value.trim(),
+          );
+          if (!sites.length || sites.some((name) => !name))
+            return toast("اكتب اسمًا لكل موقع.", "error");
+          if (
+            new Set(sites.map((name) => name.toLocaleLowerCase("ar"))).size !==
+            sites.length
+          )
+            return toast("أسماء المواقع يجب أن تكون مختلفة.", "error");
+          if (sites.length > 50)
+            return toast("الحد الأقصى ٥٠ موقعًا.", "error");
+          data.settings.shiftStart = String(fd.get("shiftStart"));
+          data.settings.shiftEnd = String(fd.get("shiftEnd"));
+          data.settings.graceMinutes = Number(fd.get("graceMinutes"));
+          data.settings.workDays = days;
+          data.settings.sites = sites;
+          const firstSetup = !data.settings.initialSetupDone;
+          data.settings.initialSetupDone = true;
+          saveData();
+          applyPreferences();
+          renderAll();
+          toast("تم حفظ ساعات الدوام وأسماء المواقع.");
+          if (firstSetup) setPage("dashboard");
+        }
+        function saveAppearance(e) {
+          e.preventDefault();
+          const fd = new FormData(e.currentTarget);
+          data.settings.theme = String(fd.get("theme"));
+          data.settings.font = String(fd.get("font"));
+          data.settings.accent = String(fd.get("accent"));
+          saveData();
+          applyPreferences();
+          toast("تم حفظ ألوان وخط المنظومة.");
+        }
+        function changeFontScale(delta) {
+          const current = Number(data.settings.fontScale) || 1;
+          data.settings.fontScale = Math.min(
+            1.5,
+            Math.max(0.85, Math.round((current + delta) * 100) / 100),
+          );
+          saveData();
+          applyPreferences();
+        }
+        function saveDeviceSettings(e) {
+          e.preventDefault();
+          const fd = new FormData(e.currentTarget);
+          data.settings.device = {
+            ...data.settings.device,
+            vendor: String(fd.get("vendor")),
+            model: String(fd.get("model")).trim(),
+            address: String(fd.get("address")).trim(),
+            port: String(fd.get("port")).trim(),
+            importSite: Number($("#deviceImportSite").value || 1),
+            status:
+              "حُفظت الإعدادات محليًا؛ شغّل الجسر المحلي أو استورد ملفًا.",
+          };
+          saveData();
+          renderSettings();
+          toast("حُفظ تعريف الجهاز محليًا؛ الاتصال الفعلي عبر سكربت ZKTeco.");
+        }
+        function isLocalBridgeHost() {
+          return (
+            ["localhost", "127.0.0.1", "::1"].includes(location.hostname) &&
+            location.protocol.startsWith("http")
+          );
+        }
+        async function syncDeviceNow(silent = false) {
+          if (!isLocalBridgeHost()) {
+            const message =
+              "المزامنة التلقائية تعمل عند فتح المنظومة من الجسر المحلي فقط؛ استخدم JSON يدويًا في نسخة GitHub Pages.";
+            $("#autoSyncStatus").textContent = message;
+            if (!silent) toast(message, "error");
+            return null;
+          }
+          try {
+            const response = await fetch("/api/device-sync", {
+              cache: "no-store",
+            });
+            const payload = await response.json();
+            if (!response.ok)
+              throw new Error(
+                payload.error || "تعذر الاتصال بجسر المزامنة المحلي.",
+              );
+            const importSite = Number($("#deviceImportSite").value || 1);
+            data.settings.device.importSite = importSite;
+            saveData();
+            const result = await importDevicePayload(payload, importSite, true);
+            if (!result) throw new Error("تعذر دمج حركات الماكينة.");
+            const now = new Date(),
+              clock = new Intl.DateTimeFormat("ar-LY", {
+                timeStyle: "short",
+              }).format(now);
+            data.settings.device.status = `آخر مزامنة ${clock} — أضيفت ${ar.format(result.addedEvents)} حركة`;
+            data.settings.device.lastSyncAt = now.toISOString();
+            saveData();
+            $("#deviceStatus").textContent = data.settings.device.status;
+            $("#autoSyncStatus").textContent =
+              `اكتملت المزامنة ${clock}. حركات جديدة: ${ar.format(result.addedEvents)}، مكررة تم تجاهلها: ${ar.format(result.duplicates)}.`;
+            if (!silent)
+              toast(
+                `اكتملت المزامنة؛ أضيفت ${ar.format(result.addedEvents)} حركة وتُجاهل ${ar.format(result.duplicates)} مكرر.`,
+              );
+            return result;
+          } catch (error) {
+            $("#autoSyncStatus").textContent =
+              error.message || "فشلت المزامنة.";
+            if (!silent) toast(error.message || "فشلت المزامنة.", "error");
+            return null;
+          }
+        }
+        function startAutoSync(immediate = false) {
+          if (autoSyncTimer) clearInterval(autoSyncTimer);
+          autoSyncTimer = null;
+          if (!data.settings.device?.autoSync || !isLocalBridgeHost()) return;
+          const allowed = [5, 10, 15, 30],
+            selected = Number(data.settings.device.syncInterval) || 10,
+            minutes = allowed.includes(selected) ? selected : 10;
+          if (immediate) syncDeviceNow(true);
+          autoSyncTimer = window.setInterval(
+            () => syncDeviceNow(true),
+            minutes * 60 * 1000,
+          );
+        }
+        function resumeAutoSync() {
+          if (data.settings.device?.autoSync) startAutoSync(true);
+        }
+        async function toggleAutoSync() {
+          const device = data.settings.device;
+          if (device.autoSync) {
+            device.autoSync = false;
+            if (autoSyncTimer) clearInterval(autoSyncTimer);
+            autoSyncTimer = null;
+            saveData();
+            renderSettings();
+            toast("تم إيقاف المزامنة التلقائية.");
+            return;
+          }
+          if (!isLocalBridgeHost())
+            return toast(
+              "افتح الملف من الجسر المحلي أولًا. GitHub Pages لا يصل مباشرة إلى شبكة الماكينة.",
+              "error",
+            );
+          try {
+            const response = await fetch("/api/health", { cache: "no-store" });
+            if (!response.ok) throw new Error("جسر المزامنة غير جاهز.");
+          } catch {
+            return toast(
+              "شغّل zkteco_sync.py مع الخيار --serve على هذا الكمبيوتر أولًا.",
+              "error",
+            );
+          }
+          device.syncInterval = Number($("#autoSyncInterval").value) || 10;
+          device.autoSync = true;
+          saveData();
+          renderSettings();
+          startAutoSync(true);
+          toast("تم تشغيل المزامنة التلقائية.");
+        }
+        function exportBackup() {
+          const blob = new Blob(
+              [
+                JSON.stringify(
+                  {
+                    product: "Dawami",
+                    version: 2,
+                    exportedAt: new Date().toISOString(),
+                    data,
+                  },
+                  null,
+                  2,
+                ),
+              ],
+              { type: "application/json" },
+            ),
+            url = URL.createObjectURL(blob),
+            a = document.createElement("a");
+          a.href = url;
+          a.download = `dawami-backup-${currentToday()}.json`;
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          toast("تم تنزيل النسخة الاحتياطية.");
+        }
+
+        async function importDeviceJson(e) {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          try {
+            const importSite = Number($("#deviceImportSite").value || 1);
+            data.settings.device.importSite = importSite;
+            saveData();
+            await importDevicePayload(
+              JSON.parse(await file.text()),
+              importSite,
+            );
+          } catch (error) {
+            toast(error.message || "تعذر استيراد ملف الجهاز.", "error");
+          } finally {
+            e.target.value = "";
+          }
+        }
+        async function importDevicePayload(
+          payload,
+          importSite,
+          silent = false,
+        ) {
+          try {
+            if (
+              payload.schema !== "dawami-zkteco-export" ||
+              !Array.isArray(payload.users) ||
+              !Array.isArray(payload.attendance)
+            )
+              throw new Error("اختر ملف JSON ناتجًا من zkteco_sync.py.");
+            const machineKey = String(
+              payload.device?.machineId ||
+                payload.device?.serialNumber ||
+                payload.device?.ip ||
+                "zkteco",
+            );
+            if (!data.settings.sites[importSite - 1])
+              throw new Error("اختر موقعًا صالحًا لهذه الماكينة.");
+            const employeeByUser = new Map(),
+              existingCodes = new Set(
+                data.employees.map((item) =>
+                  String(item.code).toLocaleLowerCase("ar"),
+                ),
+              );
+            let createdUsers = 0,
+              updatedUsers = 0,
+              nextId =
+                Math.max(
+                  Date.now(),
+                  ...data.employees.map((x) => Number(x.id) || 0),
+                ) + 1;
+            const upsertUser = (raw, fallbackId = "") => {
+              const machineUserId = String(
+                raw.userId ?? raw.employeeCode ?? raw.uid ?? fallbackId,
+              ).trim();
+              if (!machineUserId) return null;
+              const name = String(raw.name || `موظف ${machineUserId}`).trim();
+              let employee = data.employees.find(
+                (x) =>
+                  x.machineKey === machineKey &&
+                  String(x.machineUserId) === machineUserId,
+              );
+              if (!employee)
+                employee = data.employees.find(
+                  (x) =>
+                    String(x.code).toLocaleLowerCase("ar") ===
+                      machineUserId.toLocaleLowerCase("ar") &&
+                    String(x.name).trim() === name,
+                );
+              if (employee) {
+                employee.machineKey = machineKey;
+                employee.machineUserId = machineUserId;
+                employee.machineUid = String(raw.uid || "");
+                if (name) employee.name = name;
+                updatedUsers++;
+              } else {
+                let code = machineUserId.slice(0, 24),
+                  base = code;
+                if (existingCodes.has(code.toLocaleLowerCase("ar")))
+                  code = `${base.slice(0, 17)}-${machineKey.slice(-6)}`.slice(
+                    0,
+                    24,
+                  );
+                let suffix = 2;
+                while (existingCodes.has(code.toLocaleLowerCase("ar"))) {
+                  code = `${base.slice(0, 19)}-${suffix++}`.slice(0, 24);
+                }
+                existingCodes.add(code.toLocaleLowerCase("ar"));
+                employee = {
+                  id: nextId++,
+                  code,
+                  name,
+                  department: "",
+                  title: "موظف مستورد",
+                  status: "active",
+                  createdAt: new Date().toISOString(),
+                  source: "ZKTeco",
+                  machineKey,
+                  machineUserId,
+                  machineUid: String(raw.uid || ""),
+                };
+                data.employees.push(employee);
+                createdUsers++;
+              }
+              employeeByUser.set(machineUserId, employee);
+              return employee;
+            };
+            for (const user of payload.users) upsertUser(user);
+            const existingKeys = new Set(
+                data.events.map((x) => String(x.sourceKey || "")),
+              ),
+              records = [...payload.attendance].sort((a, b) =>
+                String(a.timestamp).localeCompare(String(b.timestamp)),
+              );
+            let addedEvents = 0,
+              duplicates = 0,
+              skipped = 0;
+            for (const record of records) {
+              const userId = String(
+                record.userId ?? record.employeeCode ?? record.uid ?? "",
+              ).trim();
+              if (!userId) {
+                skipped++;
+                continue;
+              }
+              let employee =
+                employeeByUser.get(userId) ||
+                data.employees.find(
+                  (x) =>
+                    x.machineKey === machineKey &&
+                    String(x.machineUserId) === userId,
+                );
+              if (!employee)
+                employee = upsertUser({
+                  userId,
+                  uid: record.uid,
+                  name: record.userName || `موظف ${userId}`,
+                });
+              const time = new Date(record.timestamp);
+              if (!Number.isFinite(time.getTime())) {
+                skipped++;
+                continue;
+              }
+              const sourceKey = String(
+                record.sourceKey ||
+                  `${machineKey}|${userId}|${record.timestamp}|${record.punch ?? ""}|${record.status ?? ""}`,
+              );
+              if (existingKeys.has(sourceKey)) {
+                duplicates++;
+                continue;
+              }
+              if (record.kind !== "in" && record.kind !== "out") {
+                skipped++;
+                continue;
+              }
+              data.events.push({
+                id: `device-${sourceKey.slice(0, 18)}`,
+                source: "ZKTeco",
+                sourceDevice: machineKey,
+                sourceKey,
+                employeeId: Number(employee.id),
+                employeeName: employee.name,
+                employeeCode: employee.code,
+                kind: record.kind,
+                location: importSite,
+                timestamp: time.toISOString(),
+                punchCode: record.punch,
+                statusCode: record.status,
+              });
+              existingKeys.add(sourceKey);
+              addedEvents++;
+            }
+            saveData();
+            renderAll();
+            const result = {
+              createdUsers,
+              updatedUsers,
+              addedEvents,
+              duplicates,
+              skipped,
+            };
+            if (!silent)
+              toast(
+                `استوردت ${ar.format(createdUsers)} موظفًا جديدًا و${ar.format(addedEvents)} حركة. تم تجاوز ${ar.format(duplicates)} حركة مكررة${skipped ? ` و${ar.format(skipped)} سجل غير صالح` : ""}.`,
+              );
+            return result;
+          } catch (error) {
+            if (silent) throw error;
+            toast(error.message || "تعذر استيراد ملف الجهاز.", "error");
+            return null;
+          }
+        }
+        async function importBackup(e) {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          try {
+            const parsed = JSON.parse(await file.text()),
+              incoming = parsed.data || parsed;
+            if (
+              !Array.isArray(incoming.employees) ||
+              !Array.isArray(incoming.events)
+            )
+              throw new Error("الملف لا يحتوي بيانات دوامي صحيحة.");
+            if (
+              !confirm(
+                "سيتم استبدال البيانات المحلية الحالية بالنسخة المختارة. هل تريد المتابعة؟",
+              )
+            )
+              return;
+            data = {
+              ...freshData(),
+              ...incoming,
+              settings: {
+                ...DEFAULT_SETTINGS,
+                ...(incoming.settings || {}),
+                sites:
+                  Array.isArray(incoming.settings?.sites) &&
+                  incoming.settings.sites.length
+                    ? incoming.settings.sites
+                        .map((v) => String(v || "موقع جديد"))
+                        .slice(0, 50)
+                    : [...DEFAULT_SETTINGS.sites],
+                workDays: Array.isArray(incoming.settings?.workDays)
+                  ? incoming.settings.workDays
+                  : [...DEFAULT_SETTINGS.workDays],
+                device: {
+                  ...DEFAULT_SETTINGS.device,
+                  ...(incoming.settings?.device || {}),
+                },
+              },
+            };
+            saveData();
+            localStorage.setItem(SESSION, data.admin?.username || "");
+            location.reload();
+          } catch (err) {
+            toast(err.message || "تعذر قراءة النسخة الاحتياطية.", "error");
+          } finally {
+            e.target.value = "";
+          }
+        }
+        function renderAll() {
+          applyPreferences();
+          renderSettings();
+          renderDashboard();
+          renderEmployees();
+          renderPunch();
+          renderReports();
+        }
+        $("#setupForm").addEventListener("submit", setupAccount);
+        $("#loginForm").addEventListener("submit", login);
+        $("#employeeForm").addEventListener("submit", addEmployee);
+        $("#workSettingsForm").addEventListener("submit", saveWorkSettings);
+        $("#appearanceForm").addEventListener("submit", saveAppearance);
+        $("#deviceSettingsForm").addEventListener("submit", saveDeviceSettings);
+        $("#deviceImportSite").addEventListener("change", () => {
+          data.settings.device.importSite =
+            Number($("#deviceImportSite").value) || 1;
+          saveData();
+        });
+        $("#autoSyncInterval").addEventListener("change", () => {
+          data.settings.device.syncInterval =
+            Number($("#autoSyncInterval").value) || 10;
+          saveData();
+          renderSettings();
+          if (data.settings.device.autoSync) startAutoSync();
+        });
+        $("#importBackupFile").addEventListener("change", importBackup);
+        $("#importDeviceFile").addEventListener("change", importDeviceJson);
+        document.addEventListener("click", (e) => {
+          const btn = e.target.closest("button,[data-location],[data-action]");
+          if (!btn) return;
+          if (btn.dataset.page) {
+            setPage(btn.dataset.page);
+            return;
+          }
+          const action = btn.dataset.action;
+          if (action === "toggle-password") {
+            const input = $("#" + btn.dataset.target);
+            input.type = input.type === "password" ? "text" : "password";
+            btn.innerHTML = icon(
+              input.type === "password" ? "eye" : "eyeOff",
+              16,
+            );
+          } else if (action === "logout") logout();
+          else if (action === "open-sidebar") openSidebar();
+          else if (action === "close-sidebar") closeSidebar();
+          else if (action === "go-punch") setPage("punch");
+          else if (action === "open-employee") openEmployee();
+          else if (action === "close-employee")
+            $("#employeeOverlay").hidden = true;
+          else if (action === "punch-in") addPunch("in");
+          else if (action === "punch-out") addPunch("out");
+          else if (action === "font-increase") changeFontScale(0.1);
+          else if (action === "font-decrease") changeFontScale(-0.1);
+          else if (action === "export-csv") exportCsv();
+          else if (action === "export-xlsx") exportXlsx();
+          else if (action === "print-report") printReport();
+          else if (action === "sync-device-now") syncDeviceNow(false);
+          else if (action === "toggle-auto-sync") toggleAutoSync();
+          else if (action === "export-backup") exportBackup();
+          else if (action === "add-site") addSite();
+          else if (action === "remove-site")
+            removeLastSite(Number(btn.dataset.index));
+          else if (action === "refresh-reports") renderReports();
+          else if (action === "dismiss-notice") $("#localNotice").hidden = true;
+          else if (action === "reset-local") resetLocal();
+          else if (action === "toggle-employee")
+            toggleEmployee(btn.dataset.id, btn.dataset.status);
+          else if (btn.dataset.location) {
+            chosenLocation = Number(btn.dataset.location);
+            renderPunch();
+          }
+        });
+        $("#punchEmployee").addEventListener("change", renderPunch);
+        $("#employeeSearch").addEventListener("input", renderEmployees);
+        $("#employeeFilter").addEventListener("change", renderEmployees);
+        [
+          "periodType",
+          "reportFrom",
+          "reportTo",
+          "reportEmployeeSearch",
+          "reportLocation",
+        ].forEach((id) =>
+          $("#" + id).addEventListener("change", renderReports),
+        );
+        $("#employeeOverlay").addEventListener("click", (e) => {
+          if (e.target.id === "employeeOverlay")
+            $("#employeeOverlay").hidden = true;
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            $("#employeeOverlay").hidden = true;
+            closeSidebar();
+          }
+        });
+        boot();
+      })();
+    </script>
+  </body>
+</html>
